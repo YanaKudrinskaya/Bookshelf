@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Bookshelf</string>
+    <string name="skip_button_text">Пропустить</string>
+    <string name="next_button_text">Далее</string>
+    <string name="on_boarding_text_1">Добро пожаловать! \n \n Здесь ты можешь хранить все свои книги.</string>
+    <string name="on_boarding_text_2">Просто поставь ее на свою книжную полку.</string>
+    <string name="on_boarding_text_3">Не помнишь, есть ли у тебя нужное произведение - книжная полка всегда под рукой в твоем телефоне.</string>
+    <string name="welcome_back">С возвращением!</string>
+    <string name="welcome_login">Войдите в свой аккаунт</string>
+    <string name="email">Email</string>
+    <string name="password">Пароль</string>
+    <string name="password_hint">Подтвердите пароль</string>
+    <string name="login_btn">Войти</string>
+    <string name="register">Регистрация</string>
+    <string name="register_btn">Зарегистрироваться</string>
+    <string name="name_hint">Имя</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">Welcome !</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">Login failed</string>
+    <string name="search_hint">Поиск...</string>
+    <string name="bottom_1">Мои книги</string>
+    <string name="bottom_2">Мои желания</string>
+    <string name="bottom_3">Настройки</string>
+</resources>
