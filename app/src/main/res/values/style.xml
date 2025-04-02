@@ -32,12 +32,28 @@
         <item name="android:textSize">32sp</item>
     </style>
 
+    <style name="Text.SettingLabel">
+        <item name="android:textColor">@color/brown_2</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="Text.SettingLogout">
+        <item name="android:textColor">@color/medium_brown_2</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="Text.AuthSec">
         <item name="android:textColor">@color/brown_50</item>
     </style>
     <style name="Text.BottomIC">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/brown</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="Text.BottomIC.NotActive">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/gray</item>
     </style>
 
     <style name="Text.EditText">
@@ -60,5 +76,8 @@
         <item name="android:textAlignment">center</item>
     </style>
 
+    <style name="IconNotActive">
+        <item name="tint">@color/gray</item>
+    </style>
 
 </resources>

@@ -24,7 +24,8 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">Login failed</string>
     <string name="search_hint">Поиск...</string>
-    <string name="bottom_1">Мои книги</string>
-    <string name="bottom_2">Мои желания</string>
-    <string name="bottom_3">Настройки</string>
+    <string name="library">Мои книги</string>
+    <string name="wishlist">Мои желания</string>
+    <string name="settings">Настройки</string>
+    <string name="logout">Выйти</string>
 </resources>

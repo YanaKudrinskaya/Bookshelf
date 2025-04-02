@@ -8,8 +8,7 @@
     android:background="@drawable/login_background"
     tools:context=".LoginActivity">
 
-    <TextView
-        android:id="@+id/welcome_text"
+    <TextView android:id="@+id/welcomeText"
         style="@style/Text.Auth"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
@@ -19,56 +18,51 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/secondary_text"
+    <TextView android:id="@+id/secondaryText"
         style="@style/Text.AuthSec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/welcome_login"
         android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="@id/welcome_text"
-        app:layout_constraintTop_toBottomOf="@id/welcome_text"/>
+        app:layout_constraintStart_toStartOf="@id/welcomeText"
+        app:layout_constraintTop_toBottomOf="@id/welcomeText"/>
 
 
-    <EditText
+    <EditText android:id="@+id/email"
         style="@style/Text.EditText.Login"
-        android:id="@+id/email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
         android:inputType="textEmailAddress"
-        app:layout_constraintStart_toStartOf="@id/welcome_text"
-        app:layout_constraintEnd_toEndOf="@id/welcome_text"
-        app:layout_constraintBottom_toTopOf="@id/pass"
+        app:layout_constraintStart_toStartOf="@id/welcomeText"
+        app:layout_constraintEnd_toEndOf="@id/welcomeText"
+        app:layout_constraintBottom_toTopOf="@id/password"
         android:hint="@string/email"/>
 
 
-    <EditText
+    <EditText android:id="@+id/password"
         style="@style/Text.EditText.Login"
-        android:id="@+id/pass"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="125dp"
         android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="@id/welcome_text"
-        app:layout_constraintEnd_toEndOf="@id/welcome_text"
-        app:layout_constraintBottom_toTopOf="@id/login_btn"
+        app:layout_constraintStart_toStartOf="@id/welcomeText"
+        app:layout_constraintEnd_toEndOf="@id/welcomeText"
+        app:layout_constraintBottom_toTopOf="@id/loginBtn"
         android:hint="@string/password"/>
 
-    <TextView
+    <TextView android:id="@+id/loginBtn"
         style="@style/Text.TextViewBtn.Gradient"
-        android:id="@+id/login_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
-        app:layout_constraintStart_toStartOf="@id/welcome_text"
-        app:layout_constraintEnd_toEndOf="@id/welcome_text"
+        app:layout_constraintStart_toStartOf="@id/welcomeText"
+        app:layout_constraintEnd_toEndOf="@id/welcomeText"
         app:layout_constraintBottom_toBottomOf="parent"
         android:text="@string/login_btn" />
 
-    <TextView
+    <TextView android:id="@+id/registerBtn"
         style="@style/Text.AuthSec"
-        android:id="@+id/register_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/register_btn"

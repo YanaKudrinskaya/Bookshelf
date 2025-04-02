@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
-        android:startColor="@color/brown"
-        android:endColor="@color/medium_brown"
-        android:angle="45"
+        android:startColor="@color/brown_2"
+        android:endColor="@color/medium_brown_2"
+        android:angle="180"
         android:type="linear" />  <!-- Тип градиента (linear, radial, sweep) -->
 
     <corners android:radius="12dp" />

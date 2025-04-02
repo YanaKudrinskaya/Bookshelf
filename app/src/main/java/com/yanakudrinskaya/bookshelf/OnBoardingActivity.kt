@@ -24,9 +24,9 @@ class OnBoardingActivity : AppCompatActivity() {
             insets
         }
 
-        skipBtn = findViewById(R.id.skip_button)
-        nextBtn = findViewById(R.id.next_button)
-        textOnBoarding = findViewById(R.id.on_boarding_text)
+        skipBtn = findViewById(R.id.skipBtn)
+        nextBtn = findViewById(R.id.nextBtn)
+        textOnBoarding = findViewById(R.id.onBoardingText)
 
         val welcomeTextList = arrayListOf(
             getString(R.string.on_boarding_text_1),
@@ -38,7 +38,7 @@ class OnBoardingActivity : AppCompatActivity() {
         var currentTextIndex = 0
 
         nextBtn.setOnClickListener {
-            if(currentTextIndex < welcomeTextList.size) {
+            if(currentTextIndex < welcomeTextList.size - 1) {
                 currentTextIndex++
                 textOnBoarding.text = welcomeTextList[currentTextIndex]
             } else {
