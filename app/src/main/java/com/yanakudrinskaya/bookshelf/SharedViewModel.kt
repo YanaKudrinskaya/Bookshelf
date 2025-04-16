@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-class SharedViewModel(application: Application) :  AndroidViewModel(application) {
+class SharedViewModel (application: Application) :  AndroidViewModel(application) {
     private val _logoutEvent = MutableLiveData<Event<Boolean>>()
     val logoutEvent: LiveData<Event<Boolean>> = _logoutEvent
 

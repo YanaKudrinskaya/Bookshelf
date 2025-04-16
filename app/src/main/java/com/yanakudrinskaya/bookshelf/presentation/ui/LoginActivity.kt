@@ -1,19 +1,25 @@
-package com.yanakudrinskaya.bookshelf
+package com.yanakudrinskaya.bookshelf.presentation.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.yanakudrinskaya.bookshelf.domain.models.Result
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.yanakudrinskaya.bookshelf.Creator
 import com.yanakudrinskaya.bookshelf.databinding.ActivityLoginBinding
+import com.yanakudrinskaya.bookshelf.domain.interactors.UserProfileInteractor
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var userProfileInteractor: UserProfileInteractor
+
     private lateinit var binding: ActivityLoginBinding
-    private val app by lazy { application as MyApp }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +39,8 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
+        userProfileInteractor = Creator.provideUserProfileInteractor()
+
         binding.registerBtn.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
             finish()
@@ -51,17 +59,23 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loginUser(email: String, password: String) {
+        lifecycleScope.launch {
+            userProfileInteractor.login(email, password).let { result ->
+                when (result) {
+                    is Result.Success -> {
+                        Log.d("Myregister", "Авторизация прошла успешно")
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        finish()
+                    }
 
-        app.auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    Log.d("Myregister", "Авторизация прошла успешно")
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                } else {
-                    Log.d("Myregister", "Ошибка авторизации")
-                    Toast.makeText(baseContext,"Authentication failed.",Toast.LENGTH_SHORT,).show()
+                    is Result.Failure -> {
+                        Log.d("Myregister", "Ошибка авторизации")
+                        Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
             }
+
+        }
     }
 }

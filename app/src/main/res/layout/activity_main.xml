@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/very_light_brown"
-    tools:context=".MainActivity">
+    tools:context=".presentation.ui.MainActivity">
 
     <ImageView android:id="@+id/editTextContainer"
         style="@style/Text.EditText.Search"
@@ -135,8 +135,8 @@
 
     <ImageView android:id="@+id/settingsBtn"
         style="@style/IconNotActive"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/ic_settings"
         app:layout_constraintTop_toTopOf="@id/libraryBtn"
         app:layout_constraintStart_toStartOf="@id/settingsLabel"

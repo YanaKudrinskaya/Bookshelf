@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/very_light_brown"
-    tools:context=".SettingsActivity">
+    tools:context=".presentation.ui.SettingsActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftBorder"
@@ -116,7 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="2dp"
-        app:layout_constraintStart_toStartOf="@id/bottomContainer"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/libraryBtn"
         android:text="@string/library"
         android:elevation ="24dp"/>

@@ -1,4 +1,4 @@
-package com.yanakudrinskaya.bookshelf
+package com.yanakudrinskaya.bookshelf.presentation.ui
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -24,19 +23,19 @@ import android.Manifest
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.os.Build
-import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
+import com.yanakudrinskaya.bookshelf.App
 import com.yanakudrinskaya.bookshelf.databinding.ActivitySettingsBinding
+import com.yanakudrinskaya.bookshelf.domain.models.UserCurrent
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
+
     private val sharedViewModel by lazy {
-        (application as MyApp).sharedViewModel
+        (application as App).sharedViewModel
     }
-    private val app by lazy { application as MyApp }
 
     private lateinit var currentPhotoPath: String
     private val PICK_IMAGE_REQUEST = 1
@@ -55,20 +54,18 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        //sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
-
         setupViews()
         checkPermissions()
 
     }
 
     private fun setupViews() {
-        binding.userNameText.text = User.userName
-
+        binding.userNameText.text = UserCurrent.name
+        binding.settingsLabel.text = UserCurrent.name
         // Загрузка аватарки через AvatarManager
-        MyApp.AvatarManager.loadAvatar(this)?.let {
+        App.AvatarManager.loadAvatar(this)?.let {
             binding.avatar.setImageBitmap(it)
-            User.avatarBitmap = it
+            UserCurrent.avatar = it
         }
 
         binding.avatar.setOnClickListener { showImagePickDialog() }
@@ -108,7 +105,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST) {
             if (grantResults.any { it != PackageManager.PERMISSION_GRANTED }) {
-                Toast.makeText(this, "Некоторые функции недоступны", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "Некоторые функции недоступны", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -182,9 +179,9 @@ class SettingsActivity : AppCompatActivity() {
             val finalBitmap = resizeBitmap(handleImageRotation(bitmap, path))
 
             // Сохранение через AvatarManager
-            if (MyApp.AvatarManager.saveAvatar(this, finalBitmap)) {
+            if (App.AvatarManager.saveAvatar(this, finalBitmap)) {
                 binding.avatar.setImageBitmap(finalBitmap)
-                User.avatarBitmap = finalBitmap
+                UserCurrent.avatar = finalBitmap
             } else {
                 Toast.makeText(this, "Ошибка сохранения аватарки", Toast.LENGTH_SHORT).show()
             }
@@ -194,9 +191,10 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun getPathFromUri(uri: Uri): String? {
-        return contentResolver.query(uri, arrayOf(MediaStore.Images.Media.DATA), null, null, null)?.use {
-            if (it.moveToFirst()) it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)) else null
-        }
+        return contentResolver.query(uri, arrayOf(MediaStore.Images.Media.DATA), null, null, null)
+            ?.use {
+                if (it.moveToFirst()) it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)) else null
+            }
     }
 
     private fun resizeBitmap(bitmap: Bitmap, maxSize: Int = 800): Bitmap {
@@ -231,5 +229,10 @@ class SettingsActivity : AppCompatActivity() {
             bitmap, 0, 0, bitmap.width, bitmap.height,
             Matrix().apply { postRotate(degrees) }, true
         )
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(0, 0) // Отключает анимации входа/выхода
     }
 }
