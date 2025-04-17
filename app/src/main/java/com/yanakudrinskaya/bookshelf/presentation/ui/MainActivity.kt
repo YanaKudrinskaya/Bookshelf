@@ -43,16 +43,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUserData() {
         binding.settingsLabel.text = UserCurrent.name
-//        loadAvatar()
     }
 
-
-    private fun loadAvatar() {
-        App.AvatarManager.loadAvatar(this)?.let {
-            binding.settingsBtn.setImageBitmap(it)
-            UserCurrent.avatar = it
-        }
-    }
     private fun setupObservers() {
         sharedViewModel.logoutEvent.observe(this) { event ->
             event.getContentIfNotHandled()?.let { shouldLogout ->

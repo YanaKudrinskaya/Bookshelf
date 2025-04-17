@@ -37,6 +37,11 @@
         <item name="android:textSize">22sp</item>
     </style>
 
+    <style name="Text.Settings">
+        <item name="android:textColor">@color/brown_2</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="Text.SettingLogout">
         <item name="android:textColor">@color/medium_brown_2</item>
         <item name="android:textSize">20sp</item>

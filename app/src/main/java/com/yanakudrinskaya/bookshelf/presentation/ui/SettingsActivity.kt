@@ -23,23 +23,45 @@ import android.Manifest
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.os.Build
+import android.util.Log
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.signature.ObjectKey
 import com.yanakudrinskaya.bookshelf.App
+import com.yanakudrinskaya.bookshelf.Creator
+import com.yanakudrinskaya.bookshelf.R
 import com.yanakudrinskaya.bookshelf.databinding.ActivitySettingsBinding
+import com.yanakudrinskaya.bookshelf.domain.impl.AvatarUseCase
+import com.yanakudrinskaya.bookshelf.domain.interactors.UserProfileInteractor
 import com.yanakudrinskaya.bookshelf.domain.models.UserCurrent
+import kotlinx.coroutines.launch
+import java.util.Currency
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
+    private lateinit var avatarUseCase: AvatarUseCase
 
     private val sharedViewModel by lazy {
         (application as App).sharedViewModel
     }
 
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        uri?.let { processSelectedImage(it, fromCamera = false) }
+    }
+
+    private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            processSelectedImage(null, fromCamera = true)
+        }
+    }
+
     private lateinit var currentPhotoPath: String
-    private val PICK_IMAGE_REQUEST = 1
-    private val CAMERA_REQUEST = 2
     private val PERMISSIONS_REQUEST = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,21 +75,17 @@ class SettingsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        avatarUseCase = Creator.provideAvatarUseCase()
 
-        setupViews()
         checkPermissions()
-
+        setupViews()
     }
 
     private fun setupViews() {
         binding.userNameText.text = UserCurrent.name
         binding.settingsLabel.text = UserCurrent.name
-        // Загрузка аватарки через AvatarManager
-        App.AvatarManager.loadAvatar(this)?.let {
-            binding.avatar.setImageBitmap(it)
-            UserCurrent.avatar = it
-        }
-
+        binding.email.text = UserCurrent.email
+        loadAvatar()
         binding.avatar.setOnClickListener { showImagePickDialog() }
         binding.libraryBtn.setOnClickListener { finish() }
         binding.logoutBtn.setOnClickListener {
@@ -76,6 +94,88 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    /////////////////// Avatar
+    private fun loadAvatar() {
+        lifecycleScope.launch {
+            avatarUseCase.loadAvatar(UserCurrent.id)?.let { avatar ->
+                Glide.with(this@SettingsActivity)
+                    .load(File(avatar.filePath))
+                    .signature(ObjectKey(System.currentTimeMillis()))
+                    .circleCrop()
+                    .into(binding.avatar)
+            } ?: run {
+                binding.avatar.setImageResource(R.drawable.placeholder)
+            }
+        }
+    }
+
+    private fun showImagePickDialog() {
+        val options = arrayOf("Из галереи", "Сделать фото", "По умолчанию", "Отмена")
+        AlertDialog.Builder(this)
+            .setTitle("Выберите источник")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> pickFromGallery()
+                    1 -> takePhoto()
+                    2 -> deleteAvatar()
+                }
+            }
+            .show()
+    }
+
+    private fun pickFromGallery() {
+        pickImageLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private fun takePhoto() {
+        try {
+            val photoFile = createImageFile()
+            currentPhotoPath = photoFile.absolutePath
+            val photoUri = FileProvider.getUriForFile(
+                this,
+                "${packageName}.fileprovider",
+                photoFile
+            )
+            takePictureLauncher.launch(photoUri)
+        } catch (e: IOException) {
+            Toast.makeText(this, "Ошибка создания файла", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun deleteAvatar() {
+        avatarUseCase.deleteAvatar(UserCurrent.id)
+        Glide.with(this@SettingsActivity)
+            .load(R.drawable.placeholder)
+            .circleCrop()
+            .into(binding.avatar)
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        return File.createTempFile(
+            "JPEG_${SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())}_",
+            ".jpg",
+            getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        ).apply { currentPhotoPath = absolutePath }
+    }
+
+    private fun processSelectedImage(uri: Uri?, fromCamera: Boolean) {
+        lifecycleScope.launch {
+            val success = if (fromCamera) {
+                avatarUseCase.saveAvatarFromCamera(UserCurrent.id, currentPhotoPath)
+            } else {
+                uri?.let { avatarUseCase.saveAvatarFromUri(UserCurrent.id, it) } ?: false
+            }
+
+            if (success) {
+                loadAvatar()
+            } else {
+                Toast.makeText(this@SettingsActivity, "Ошибка сохранения", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    /////////////////// Permissions
     private fun checkPermissions() {
         val permissions = mutableListOf<String>().apply {
             add(Manifest.permission.CAMERA)
@@ -110,129 +210,8 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun showImagePickDialog() {
-        val options = arrayOf("Из галереи", "Сделать фото", "Отмена")
-        AlertDialog.Builder(this)
-            .setTitle("Выберите источник")
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> pickFromGallery()
-                    1 -> takePhoto()
-                }
-            }
-            .show()
-    }
-
-    private fun pickFromGallery() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, PICK_IMAGE_REQUEST)
-    }
-
-    private fun takePhoto() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { intent ->
-            intent.resolveActivity(packageManager)?.also {
-                try {
-                    val photoFile = createImageFile()
-                    val photoUri = FileProvider.getUriForFile(
-                        this,
-                        "${packageName}.fileprovider",
-                        photoFile
-                    )
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-                    startActivityForResult(intent, CAMERA_REQUEST)
-                } catch (e: IOException) {
-                    Toast.makeText(this, "Ошибка создания файла", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        return File.createTempFile(
-            "JPEG_${SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())}_",
-            ".jpg",
-            getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        ).apply { currentPhotoPath = absolutePath }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != RESULT_OK) return
-
-        when (requestCode) {
-            PICK_IMAGE_REQUEST -> data?.data?.let { processSelectedImage(it, false) }
-            CAMERA_REQUEST -> processSelectedImage(null, true)
-        }
-    }
-
-    private fun processSelectedImage(uri: Uri?, fromCamera: Boolean) {
-        try {
-            val bitmap = if (fromCamera) {
-                BitmapFactory.decodeFile(currentPhotoPath)
-            } else {
-                MediaStore.Images.Media.getBitmap(contentResolver, uri)
-            }
-
-            val path = if (fromCamera) currentPhotoPath else getPathFromUri(uri!!)
-            val finalBitmap = resizeBitmap(handleImageRotation(bitmap, path))
-
-            // Сохранение через AvatarManager
-            if (App.AvatarManager.saveAvatar(this, finalBitmap)) {
-                binding.avatar.setImageBitmap(finalBitmap)
-                UserCurrent.avatar = finalBitmap
-            } else {
-                Toast.makeText(this, "Ошибка сохранения аватарки", Toast.LENGTH_SHORT).show()
-            }
-        } catch (e: Exception) {
-            Toast.makeText(this, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun getPathFromUri(uri: Uri): String? {
-        return contentResolver.query(uri, arrayOf(MediaStore.Images.Media.DATA), null, null, null)
-            ?.use {
-                if (it.moveToFirst()) it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)) else null
-            }
-    }
-
-    private fun resizeBitmap(bitmap: Bitmap, maxSize: Int = 800): Bitmap {
-        val ratio = bitmap.width.toFloat() / bitmap.height
-        val (width, height) = if (ratio > 1) maxSize to (maxSize / ratio).toInt()
-        else (maxSize * ratio).toInt() to maxSize
-        return Bitmap.createScaledBitmap(bitmap, width, height, true)
-    }
-
-    private fun handleImageRotation(bitmap: Bitmap, path: String?): Bitmap {
-        val orientation = path?.let {
-            try {
-                ExifInterface(path).getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL
-                )
-            } catch (e: IOException) {
-                ExifInterface.ORIENTATION_NORMAL
-            }
-        } ?: ExifInterface.ORIENTATION_NORMAL
-
-        return when (orientation) {
-            ExifInterface.ORIENTATION_ROTATE_90 -> rotateBitmap(bitmap, 90f)
-            ExifInterface.ORIENTATION_ROTATE_180 -> rotateBitmap(bitmap, 180f)
-            ExifInterface.ORIENTATION_ROTATE_270 -> rotateBitmap(bitmap, 270f)
-            else -> bitmap
-        }
-    }
-
-    private fun rotateBitmap(bitmap: Bitmap, degrees: Float): Bitmap {
-        return Bitmap.createBitmap(
-            bitmap, 0, 0, bitmap.width, bitmap.height,
-            Matrix().apply { postRotate(degrees) }, true
-        )
-    }
-
     override fun finish() {
         super.finish()
-        overridePendingTransition(0, 0) // Отключает анимации входа/выхода
+        overridePendingTransition(0, 0);
     }
 }

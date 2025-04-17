@@ -32,10 +32,10 @@
         android:layout_marginTop="70dp">
 
         <ImageView android:id="@+id/avatar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_default_avatar"
-            android:background="@drawable/circle_background"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/placeholder"
+            android:background="@color/brown_2"
             android:padding="2dp"
             android:scaleType="centerCrop"/>
 
@@ -51,14 +51,44 @@
         android:layout_marginTop="8dp"
         tools:text="Лора Робертс"/>
 
-    <TextView android:id="@+id/settingsHead"
+    <ImageView android:id="@+id/nameEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:src="@drawable/ic_edit"
+        app:tint="@color/brown_2"
+        app:layout_constraintStart_toEndOf="@id/userNameText"
+        app:layout_constraintBottom_toBottomOf="@id/userNameText"/>
+
+    <!--TextView android:id="@+id/settingsHead"
         style="@style/Text.SettingLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/userNameText"
         android:layout_marginTop="38dp"
-        android:text="@string/settings"/>
+        android:text="@string/settings"/-->
+
+    <ImageView android:id="@+id/emailIC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:src="@drawable/ic_email"
+        app:tint="@color/brown_2"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintEnd_toStartOf="@id/email"
+        app:layout_constraintTop_toBottomOf="@id/userNameText"/>
+
+    <TextView android:id="@+id/email"
+        style="@style/Text.Settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/emailIC"
+        app:layout_constraintTop_toTopOf="@id/emailIC"
+        tools:text="Email"
+        />
+
 
     <TextView
         android:id="@+id/logoutBtn"
@@ -66,8 +96,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/logout"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toStartOf="@id/logoutImg"
-        app:layout_constraintTop_toBottomOf="@id/settingsHead"
+        app:layout_constraintTop_toBottomOf="@id/email"
         android:layout_marginEnd="12dp"/>
 
     <ImageView android:id="@+id/logoutImg"
@@ -156,6 +187,6 @@
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/libraryLabel"
-        android:text="@string/settings"
+        android:text="@string/profile"
         android:elevation ="24dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

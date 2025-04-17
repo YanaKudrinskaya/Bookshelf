@@ -77,6 +77,7 @@ class UserProfileInteractorImpl(
     }
 
     private fun saveCurrentuser(user : User) {
+        UserCurrent.id = user.userId
         UserCurrent.name = user.name
         UserCurrent.email = user.email
     }

@@ -27,5 +27,6 @@
     <string name="library">Мои книги</string>
     <string name="wishlist">Мои желания</string>
     <string name="settings">Настройки</string>
+    <string name="profile">Профиль</string>
     <string name="logout">Выйти</string>
 </resources>

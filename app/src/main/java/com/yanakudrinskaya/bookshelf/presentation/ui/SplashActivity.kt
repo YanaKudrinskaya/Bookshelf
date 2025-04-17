@@ -54,6 +54,7 @@ class SplashActivity : AppCompatActivity() {
             userProfileInteractor.getCurrentUser().let { result ->
                 when (result) {
                     is Result.Success -> {
+                        UserCurrent.id = result.data.userId
                         UserCurrent.name = result.data.name
                         UserCurrent.email = result.data.email
                         Log.d("Myregister", "Сохранила object ${result.data.name}")

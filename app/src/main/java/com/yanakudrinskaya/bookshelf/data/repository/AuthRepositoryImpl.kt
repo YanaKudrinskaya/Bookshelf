@@ -15,7 +15,7 @@ class AuthRepositoryImpl : AuthRepository {
     override suspend fun register(name: String, email: String, password: String): Result<User> {
         return try {
             val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-            val user = User(name, email)
+            val user = User(authResult.user?.uid?: "", name, email)
 
             firestore.collection("users").document(authResult.user?.uid ?: "").set(
                 mapOf("name" to name, "email" to email)
@@ -36,6 +36,7 @@ class AuthRepositoryImpl : AuthRepository {
                     .await()
 
                 User(
+                    userId = firebaseUser.uid,
                     name = document.getString("name") ?: "",
                     email = firebaseUser.email ?: ""
                 )
@@ -53,7 +54,7 @@ class AuthRepositoryImpl : AuthRepository {
                     .document(firebaseUser.uid)
                     .get()
                     .await()
-                Result.Success(User(document.getString("name") ?: "", document.getString("email")?: ""))
+                Result.Success(User(firebaseUser.uid,document.getString("name") ?: "", document.getString("email")?: ""))
         } ?: Result.Failure(Exception("No authenticated user"))
     }
 
