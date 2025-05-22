@@ -40,7 +40,8 @@ android {
 }
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
+    implementation(libs.io)
+    implementation(libs.firebase.bom)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
     implementation(libs.glide)
@@ -54,6 +55,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

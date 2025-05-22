@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-feature android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -32,22 +33,19 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <activity
-            android:name=".presentation.ui.SettingsActivity"
+            android:name=".settings.ui.activity.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.MainActivity"
+            android:name=".main.ui.activity.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.LoginActivity"
+            android:name=".login.ui.activity.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.RegisterActivity"
+            android:name=".boarding.ui.activity.OnBoardingActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.OnBoardingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.ui.SplashActivity"
+            android:name=".splash.ui.activity.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

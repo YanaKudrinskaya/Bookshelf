@@ -6,15 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_background"
-    tools:context=".presentation.ui.LoginActivity">
+    tools:context=".login.ui.activity.LoginActivity">
 
     <TextView android:id="@+id/welcomeText"
         style="@style/Text.Auth"
-        android:layout_width="300dp"
+        android:layout_width="@dimen/text_width"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:layout_marginBottom="80dp"
-        app:layout_constraintBottom_toTopOf="@id/email"
+        android:layout_marginBottom="@dimen/margin_10"
+        app:layout_constraintBottom_toTopOf="@id/secondaryText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -22,17 +22,28 @@
         style="@style/Text.AuthSec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/welcome_login"
-        android:layout_marginTop="10dp"
+        tools:text="@string/welcome_login"
+        android:layout_marginBottom="@dimen/margin_60"
         app:layout_constraintStart_toStartOf="@id/welcomeText"
-        app:layout_constraintTop_toBottomOf="@id/welcomeText"/>
+        app:layout_constraintBottom_toTopOf="@id/userName"/>
 
+
+    <EditText android:id="@+id/userName"
+        style="@style/Text.EditText.Login"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_28"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="@id/welcomeText"
+        app:layout_constraintEnd_toEndOf="@id/welcomeText"
+        app:layout_constraintBottom_toTopOf="@id/email"
+        android:hint="@string/name_hint"/>
 
     <EditText android:id="@+id/email"
         style="@style/Text.EditText.Login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="@dimen/margin_28"
         android:inputType="textEmailAddress"
         app:layout_constraintStart_toStartOf="@id/welcomeText"
         app:layout_constraintEnd_toEndOf="@id/welcomeText"
@@ -44,31 +55,42 @@
         style="@style/Text.EditText.Login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="125dp"
+        app:layout_goneMarginBottom="@dimen/margin_80"
+        android:layout_marginBottom="@dimen/margin_28"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="@id/welcomeText"
         app:layout_constraintEnd_toEndOf="@id/welcomeText"
-        app:layout_constraintBottom_toTopOf="@id/loginBtn"
+        app:layout_constraintBottom_toTopOf="@id/confPassword"
         android:hint="@string/password"/>
 
-    <TextView android:id="@+id/loginBtn"
+    <EditText android:id="@+id/confPassword"
+        style="@style/Text.EditText.Login"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:layout_marginBottom="@dimen/margin_60"
+        app:layout_constraintStart_toStartOf="@id/welcomeText"
+        app:layout_constraintEnd_toEndOf="@id/welcomeText"
+        app:layout_constraintBottom_toTopOf="@id/button"
+        android:hint="@string/password_hint"/>
+
+    <TextView android:id="@+id/button"
         style="@style/Text.TextViewBtn.Gradient"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="@dimen/margin_100"
         app:layout_constraintStart_toStartOf="@id/welcomeText"
         app:layout_constraintEnd_toEndOf="@id/welcomeText"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/login_btn" />
+        android:text="@string/register_btn" />
 
-    <TextView android:id="@+id/registerBtn"
+    <TextView android:id="@+id/changeContentBtn"
         style="@style/Text.AuthSec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/register_btn"
-        android:layout_marginBottom="22dp"
+        android:layout_marginBottom="@dimen/margin_16"
+        android:text="@string/login_btn"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

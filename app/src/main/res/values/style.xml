@@ -17,7 +17,7 @@
 
     <style name="Text.TextViewBtn.Border">
         <item name="android:textColor">@color/brown_75</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:background">@drawable/btn_border</item>
     </style>
 
@@ -25,6 +25,17 @@
         <item name="android:textColor">@color/light_brown</item>
         <item name="android:textSize">20sp</item>
         <item name="android:background">@drawable/btn_gradient</item>
+    </style>
+
+    <style name="Text.BookItem">
+        <item name="android:textColor">@color/brown_2</item>
+    </style>
+    <style name="Text.BookItem.Title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="Text.BookItem.Author">
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="Text.Auth">
@@ -65,9 +76,11 @@
         <item name="android:textColor">@color/brown</item>
         <item name="android:padding">10dp</item>
         <item name="android:textColorHint">@color/brown_50</item>
+        <item name="android:textCursorDrawable">@drawable/brown_cursor</item>
     </style>
 
     <style name="Text.EditText.Login">
+        <item name="colorControlActivated">@color/brown</item>
         <item name="android:background">@drawable/login_border</item>
     </style>
 

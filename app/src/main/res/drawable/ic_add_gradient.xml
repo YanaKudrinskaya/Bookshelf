@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-        <shape xmlns:android="http://schemas.android.com/apk/res/android"
-            android:shape="oval">
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?attr/colorControlHighlight">
+    <item>
+        <shape android:shape="oval">
             <gradient
-                android:startColor="@color/brown_2"
-                android:endColor="@color/medium_brown_2"
                 android:angle="180"
+                android:endColor="@color/medium_brown_2"
+                android:startColor="@color/brown_2"
                 android:type="linear" />
-            <size android:width="82dp" android:height="80dp"/>
+            <size
+                android:width="80dp"
+                android:height="80dp" />
         </shape>
+    </item>
+</ripple>
