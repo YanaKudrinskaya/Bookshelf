@@ -1,8 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Bookshelf" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
+    <style name="Base.Theme.Bookshelf" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
     </style>
 
-    <style name="Theme.Bookshelf" parent="Base.Theme.Bookshelf" />
+    <style name="Theme.Bookshelf" parent="Base.Theme.Bookshelf" >
+
+    </style>
 </resources>

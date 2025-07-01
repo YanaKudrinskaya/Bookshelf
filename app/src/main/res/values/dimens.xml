@@ -19,7 +19,13 @@
     <dimen name="margin_125">125dp</dimen>
     <dimen name="elevation">24dp</dimen>
     <dimen name="ic">24dp</dimen>
+    <dimen name="progress_bar">44dp</dimen>
     <dimen name="edit_search_height">45dp</dimen>
     <dimen name="bottom_container_height">60dp</dimen>
     <dimen name="avatar">120dp</dimen>
+    <dimen name="bottom_label_width">100dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="fragment_horizontal_margin">16dp</dimen>
+    <dimen name="fragment_vertical_margin">16dp</dimen>
 </resources>

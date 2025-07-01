@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/libraryFragment">
+
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.yanakudrinskaya.bookshelf.library.ui.fragment.LibraryFragment"
+        android:label="fragment_library"
+        tools:layout="@layout/fragment_library">
+        <action
+            android:id="@+id/action_libraryFragment_to_addBookFragment"
+            app:destination="@id/addBookFragment"
+            app:popUpTo="@id/libraryFragment"
+            app:popUpToInclusive="false"/>
+        <action
+            android:id="@+id/action_libraryFragment_to_bookFragment"
+            app:destination="@id/bookFragment"
+            app:popUpTo="@id/libraryFragment"
+            app:popUpToInclusive="false"/>
+    </fragment>
+    <fragment
+        android:id="@+id/wishFragment"
+        android:name="com.yanakudrinskaya.bookshelf.wish.ui.fragment.WishFragment"
+        android:label="fragment_wish"
+        tools:layout="@layout/fragment_wish" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.yanakudrinskaya.bookshelf.profile.ui.fragment.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_auth_graph"
+            app:destination="@id/auth_graph"
+            app:popUpTo="@id/navigation_graph"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/addBookFragment"
+        android:name="com.yanakudrinskaya.bookshelf.add_book.ui.fragment.AddBookFragment"
+        android:label="fragment_add_book"
+        tools:layout="@layout/fragment_add_book" />
+    <fragment
+        android:id="@+id/bookFragment"
+        android:name="com.yanakudrinskaya.bookshelf.BookFragment"
+        android:label="fragment_book"
+        tools:layout="@layout/fragment_book" />
+</navigation>

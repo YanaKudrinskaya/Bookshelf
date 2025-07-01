@@ -1,14 +1,15 @@
 package com.yanakudrinskaya.bookshelf.di
 
-import com.yanakudrinskaya.bookshelf.boarding.domain.impl.OnBoardingContentUseCase
-import com.yanakudrinskaya.bookshelf.login.domain.LoginScreenStateInteractor
-import com.yanakudrinskaya.bookshelf.login.domain.UserProfileInteractor
-import com.yanakudrinskaya.bookshelf.login.domain.impl.LoginScreenStateInteractorImpl
-import com.yanakudrinskaya.bookshelf.login.domain.impl.UserProfileInteractorImpl
-import com.yanakudrinskaya.bookshelf.settings.domain.AvatarInteractor
-import com.yanakudrinskaya.bookshelf.settings.domain.FileManagerInteractor
-import com.yanakudrinskaya.bookshelf.settings.domain.impl.AvatarInteractorImpl
-import com.yanakudrinskaya.bookshelf.settings.domain.impl.FileManagerInteractorImpl
+import com.yanakudrinskaya.bookshelf.splash.domain.impl.OnBoardingContentUseCase
+import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileInteractor
+import com.yanakudrinskaya.bookshelf.auth.domain.impl.UserProfileInteractorImpl
+import com.yanakudrinskaya.bookshelf.library.domain.BookshelfInteractor
+import com.yanakudrinskaya.bookshelf.library.domain.impl.BookshelfInteractorImpl
+import com.yanakudrinskaya.bookshelf.library.domain.use_cases.ResourcesProviderUseCase
+import com.yanakudrinskaya.bookshelf.profile.domain.AvatarInteractor
+import com.yanakudrinskaya.bookshelf.profile.domain.FileManagerInteractor
+import com.yanakudrinskaya.bookshelf.profile.domain.impl.AvatarInteractorImpl
+import com.yanakudrinskaya.bookshelf.profile.domain.impl.FileManagerInteractorImpl
 import com.yanakudrinskaya.bookshelf.splash.domain.use_cases.SplashUseCase
 import org.koin.dsl.module
 
@@ -16,10 +17,6 @@ val interactorModule = module {
 
     single<UserProfileInteractor> {
         UserProfileInteractorImpl(get(), get(), get())
-    }
-
-    single<LoginScreenStateInteractor> {
-        LoginScreenStateInteractorImpl(get())
     }
 
     single<AvatarInteractor> {
@@ -36,6 +33,14 @@ val interactorModule = module {
 
     single<OnBoardingContentUseCase> {
         OnBoardingContentUseCase(get())
+    }
+
+    single<ResourcesProviderUseCase> {
+        ResourcesProviderUseCase(get())
+    }
+
+    single<BookshelfInteractor> {
+        BookshelfInteractorImpl(get())
     }
 
 }

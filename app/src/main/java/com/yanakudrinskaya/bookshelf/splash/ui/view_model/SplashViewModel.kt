@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yanakudrinskaya.bookshelf.Result
-import com.yanakudrinskaya.bookshelf.login.domain.UserProfileInteractor
+import com.yanakudrinskaya.bookshelf.utils.Result
+import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileInteractor
 import com.yanakudrinskaya.bookshelf.splash.domain.use_cases.SplashUseCase
 import com.yanakudrinskaya.bookshelf.splash.ui.model.NavigationEvent
 import kotlinx.coroutines.launch

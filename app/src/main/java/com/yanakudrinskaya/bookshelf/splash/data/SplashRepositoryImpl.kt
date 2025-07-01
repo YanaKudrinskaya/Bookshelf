@@ -1,7 +1,7 @@
 package com.yanakudrinskaya.bookshelf.splash.data
 
 import android.content.SharedPreferences
-import com.yanakudrinskaya.bookshelf.login.data.IS_FIRST_LAUNCH
+import com.yanakudrinskaya.bookshelf.auth.data.IS_FIRST_LAUNCH
 import com.yanakudrinskaya.bookshelf.splash.domain.SplashRepository
 
 class SplashRepositoryImpl (

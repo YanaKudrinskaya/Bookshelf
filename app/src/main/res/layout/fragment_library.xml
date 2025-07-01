@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/very_light_brown"
+    android:paddingTop="@dimen/margin_60"
+    tools:context=".library.ui.fragment.LibraryFragment">
+
+    <ImageView
+        android:id="@+id/ivContainer"
+        style="@style/Text.EditText.Search"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/edit_search_height"
+        android:layout_marginHorizontal="@dimen/margin_22"
+        android:layout_marginBottom="@dimen/margin_36"
+        app:layout_constraintBottom_toTopOf="@id/rvItems"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_46"
+        android:background="@null"
+        android:hint="@string/search_hint"
+        android:textColorHint="@color/brown_45"
+        app:layout_constraintBottom_toBottomOf="@id/ivContainer"
+        app:layout_constraintEnd_toEndOf="@id/ivContainer"
+        app:layout_constraintStart_toStartOf="@id/ivContainer"
+        app:layout_constraintTop_toTopOf="@id/ivContainer" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_8"
+        android:background="@drawable/ic_search"
+        android:backgroundTint="@color/brown_45"
+        app:layout_constraintBottom_toBottomOf="@id/ivContainer"
+        app:layout_constraintStart_toStartOf="@id/ivContainer"
+        app:layout_constraintTop_toTopOf="@id/ivContainer" />
+
+    <ImageView
+        android:id="@+id/ivClearBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_clear"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/ivContainer"
+        app:layout_constraintEnd_toEndOf="@id/ivContainer"
+        app:layout_constraintStart_toEndOf="@id/search"
+        app:layout_constraintTop_toTopOf="@id/ivContainer" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvItems"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivContainer"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView android:id="@+id/tvLibraryEmpty"
+        style="@style/Text.TextViewBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_28"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivContainer"
+        android:text="@string/library_is_empty"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="140dp"
+        android:indeterminateTint="@color/brown_2"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddBook"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:layout_marginEnd="@dimen/margin_22"
+        android:layout_marginBottom="@dimen/margin_22"
+        app:backgroundTint="@color/brown_2"
+        android:foreground="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

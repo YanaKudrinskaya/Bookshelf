@@ -14,6 +14,7 @@
     <string name="register">Регистрация</string>
     <string name="register_btn">Зарегистрироваться</string>
     <string name="name_hint">Имя</string>
+    <string name="new_name_hint">Введите новое имя</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -30,4 +31,23 @@
     <string name="profile">Профиль</string>
     <string name="logout">Выйти</string>
     <string name="authorization_error">Ошибка авторизации</string>
+
+    <string name="tab_library">Мои книги</string>
+    <string name="tab_wish">Мои желания</string>
+    <string name="tab_settings">Настройки</string>
+
+    <string name="add_book_title">Новая книга</string>
+    <string name="author_hint">Автор</string>
+    <string name="title_hint">Название</string>
+    <string name="publisher_hint">Издательство</string>
+    <string name="date_hint">Год издания</string>
+    <string name="content">Содержание:</string>
+    <string name="add_work">Добавить произведение</string>
+    <string name="save">Сохранить</string>
+
+    <string name="library_is_empty">Здесь пока нет книг</string>
+    <string name="content_is_empty">В книге пока ничего нет</string>
+    <string name="book_saved">Книга сохранена</string>
+
+
 </resources>

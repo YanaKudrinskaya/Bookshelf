@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@drawable/login_background"
+android:paddingVertical="@dimen/margin_60"
+tools:context=".auth.ui.fragment.RegisterFragment">
+
+<TextView
+    android:id="@+id/tvWelcomeText"
+    style="@style/Text.Auth"
+    android:layout_width="@dimen/text_width"
+    android:layout_height="wrap_content"
+    android:text="@string/app_name"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+
+<EditText android:id="@+id/etUserName"
+    style="@style/Text.EditText.Login"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_28"
+    android:inputType="textPersonName"
+    android:importantForAutofill="no"
+    app:layout_constraintTop_toBottomOf="@id/tvWelcomeText"
+    app:layout_constraintStart_toStartOf="@id/tvWelcomeText"
+    app:layout_constraintEnd_toEndOf="@id/tvWelcomeText"
+    android:hint="@string/name_hint"/>
+
+<EditText android:id="@+id/etEmail"
+    style="@style/Text.EditText.Login"
+    android:importantForAutofill="no"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_28"
+    android:inputType="textEmailAddress"
+    app:layout_constraintTop_toBottomOf="@id/etUserName"
+    app:layout_constraintStart_toStartOf="@id/tvWelcomeText"
+    app:layout_constraintEnd_toEndOf="@id/tvWelcomeText"
+    android:hint="@string/email"/>
+
+
+<EditText android:id="@+id/etPassword"
+    style="@style/Text.EditText.Login"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:layout_goneMarginBottom="@dimen/margin_80"
+    android:layout_marginTop="@dimen/margin_28"
+    android:inputType="textPassword"
+    app:layout_constraintTop_toBottomOf="@id/etEmail"
+    app:layout_constraintStart_toStartOf="@id/tvWelcomeText"
+    app:layout_constraintEnd_toEndOf="@id/tvWelcomeText"
+    android:hint="@string/password"/>
+
+<EditText android:id="@+id/etConfPassword"
+    style="@style/Text.EditText.Login"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:inputType="textPassword"
+    android:layout_marginTop="@dimen/margin_28"
+    app:layout_constraintTop_toBottomOf="@id/etPassword"
+    app:layout_constraintStart_toStartOf="@id/tvWelcomeText"
+    app:layout_constraintEnd_toEndOf="@id/tvWelcomeText"
+    android:hint="@string/password_hint"/>
+
+<TextView android:id="@+id/tvButton"
+    style="@style/Text.TextViewBtn.Gradient"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_60"
+    app:layout_constraintStart_toStartOf="@id/tvWelcomeText"
+    app:layout_constraintEnd_toEndOf="@id/tvWelcomeText"
+    app:layout_constraintTop_toBottomOf="@id/etConfPassword"
+    android:text="@string/register_btn" />
+
+<TextView android:id="@+id/tvloginBtn"
+    style="@style/Text.AuthSec"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_16"
+    android:text="@string/login_btn"
+    app:layout_constraintTop_toBottomOf="@id/tvButton"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
