@@ -9,8 +9,8 @@
     tools:context=".auth.ui.fragment.LoginFragment">
 
     <TextView
-        android:id="@+id/tvWelcome"
-        style="@style/Text.Auth"
+        android:id="@+id/tv_welcome"
+        style="@style/Text.32"
         android:layout_width="@dimen/text_width"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
@@ -19,58 +19,74 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvSecondary"
+        android:id="@+id/tv_secondary"
         style="@style/Text.AuthSec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_10"
-        app:layout_constraintStart_toStartOf="@id/tvWelcome"
-        app:layout_constraintTop_toBottomOf="@+id/tvWelcome"
+        app:layout_constraintStart_toStartOf="@id/tv_welcome"
+        app:layout_constraintTop_toBottomOf="@+id/tv_welcome"
         android:text="@string/welcome_login" />
 
-
-    <EditText android:id="@+id/etEmail"
-        style="@style/Text.EditText.Login"
-        android:importantForAutofill="no"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_email"
+        style="@style/TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_28"
-        android:inputType="textEmailAddress"
-        app:layout_constraintTop_toBottomOf="@id/tvSecondary"
-        app:layout_constraintStart_toStartOf="@id/tvWelcome"
-        app:layout_constraintEnd_toEndOf="@id/tvWelcome"
-        android:hint="@string/email"/>
+        android:hint="@string/email"
+        app:layout_constraintTop_toBottomOf="@id/tv_secondary"
+        app:layout_constraintStart_toStartOf="@id/tv_welcome"
+        app:layout_constraintEnd_toEndOf="@id/tv_welcome">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_email"
+            style="@style/Text.InputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:imeOptions="actionDone"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText android:id="@+id/edPassword"
-        style="@style/Text.EditText.Login"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_password"
+        style="@style/TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_goneMarginBottom="@dimen/margin_80"
         android:layout_marginTop="@dimen/margin_28"
-        android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/etEmail"
-        app:layout_constraintStart_toStartOf="@id/tvWelcome"
-        app:layout_constraintEnd_toEndOf="@id/tvWelcome"
-        android:hint="@string/password"/>
+        android:hint="@string/password"
+        app:layout_constraintTop_toBottomOf="@id/til_email"
+        app:layout_constraintStart_toStartOf="@id/tv_welcome"
+        app:layout_constraintEnd_toEndOf="@id/tv_welcome">
 
-    <TextView android:id="@+id/tvButton"
-        style="@style/Text.TextViewBtn.Gradient"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_password"
+            style="@style/Text.InputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:imeOptions="actionDone"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_login"
+        style="@style/Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_60"
-        app:layout_constraintStart_toStartOf="@id/tvWelcome"
-        app:layout_constraintEnd_toEndOf="@id/tvWelcome"
-        app:layout_constraintTop_toBottomOf="@id/edPassword"
+        android:layout_marginTop="@dimen/margin_46"
+        app:layout_constraintStart_toStartOf="@id/tv_welcome"
+        app:layout_constraintEnd_toEndOf="@id/tv_welcome"
+        app:layout_constraintTop_toBottomOf="@id/til_password"
         android:text="@string/login_btn" />
 
-    <TextView android:id="@+id/tvChangeContent"
-        style="@style/Text.AuthSec"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_register"
+        style="@style/ButtonBorderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_16"
         android:text="@string/register_btn"
-        app:layout_constraintTop_toBottomOf="@id/tvButton"
+        app:layout_constraintTop_toBottomOf="@id/btn_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

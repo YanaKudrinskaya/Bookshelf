@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#1A1B22</color>
+    <color name="white">#FBF5FB</color>
     <color name="gray">#B2B2BA</color>
     <color name="dark_brown">#412110</color>
     <color name="brown">#7E4B30</color>
-    <color name="brown_2">#7E4B30</color>
     <color name="brown_75">#BF7E4B30</color>
     <color name="brown_50">#807E4B30</color>
     <color name="brown_45">#737E4B30</color>
@@ -14,5 +13,5 @@
     <color name="medium_brown_20">#32C98957</color>
     <color name="light_brown">#FFEDD0</color>
     <color name="very_light_brown">#FBF5FB</color>
-    <color name="error">#FF1E00</color>
+    <color name="error">#AF1400</color>
 </resources>

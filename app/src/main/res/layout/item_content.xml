@@ -9,26 +9,27 @@
 
     <TextView
         android:id="@+id/tvContentAuthor"
-        style="@style/Text.BookItem.Author"
+        style="@style/Text.Light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:textColor="@color/very_light_brown"
         tools:text = "Автор"/>
 
     <TextView
         android:id="@+id/tvContentTitle"
-        style="@style/Text.BookItem.Title"
-        android:layout_width="wrap_content"
+        style="@style/Text.16"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginStart="8dp"
+        android:textColor="@color/very_light_brown"
         tools:text = "Название"/>
 
     <ImageView android:id="@+id/ivChangeItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_16"
-        app:tint="@color/brown_2"
+        app:tint="?attr/colorOnPrimary"
         android:layout_gravity="end"
         android:src="@drawable/ic_edit"/>
 
@@ -37,5 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_16"
         android:layout_gravity="end"
+        app:tint="?attr/colorOnPrimary"
         android:src="@drawable/ic_close"/>
 </LinearLayout>

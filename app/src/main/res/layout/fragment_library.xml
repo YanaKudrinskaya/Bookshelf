@@ -6,73 +6,50 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/very_light_brown"
     android:paddingTop="@dimen/margin_60"
+    android:paddingHorizontal="@dimen/margin_16"
     tools:context=".library.ui.fragment.LibraryFragment">
 
-    <ImageView
-        android:id="@+id/ivContainer"
-        style="@style/Text.EditText.Search"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_search"
+        style="@style/TextInputLayout.Search"
         android:layout_width="0dp"
-        android:layout_height="@dimen/edit_search_height"
-        android:layout_marginHorizontal="@dimen/margin_22"
-        android:layout_marginBottom="@dimen/margin_36"
-        app:layout_constraintBottom_toTopOf="@id/rvItems"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        app:startIconDrawable="@drawable/ic_search"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <EditText
-        android:id="@+id/search"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_46"
-        android:background="@null"
-        android:hint="@string/search_hint"
-        android:textColorHint="@color/brown_45"
-        app:layout_constraintBottom_toBottomOf="@id/ivContainer"
-        app:layout_constraintEnd_toEndOf="@id/ivContainer"
-        app:layout_constraintStart_toStartOf="@id/ivContainer"
-        app:layout_constraintTop_toTopOf="@id/ivContainer" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_8"
-        android:background="@drawable/ic_search"
-        android:backgroundTint="@color/brown_45"
-        app:layout_constraintBottom_toBottomOf="@id/ivContainer"
-        app:layout_constraintStart_toStartOf="@id/ivContainer"
-        app:layout_constraintTop_toTopOf="@id/ivContainer" />
-
-    <ImageView
-        android:id="@+id/ivClearBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_clear"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/ivContainer"
-        app:layout_constraintEnd_toEndOf="@id/ivContainer"
-        app:layout_constraintStart_toEndOf="@id/search"
-        app:layout_constraintTop_toTopOf="@id/ivContainer" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_search"
+            style="@style/Text.InputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textAutoComplete"
+            android:paddingStart="@dimen/margin_46"
+            android:imeOptions="actionDone"
+            android:hint="@string/search_hint"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvItems"
+        android:id="@+id/rv_items"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_marginTop="@dimen/margin_16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivContainer"
+        app:layout_constraintTop_toBottomOf="@id/til_search"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView android:id="@+id/tvLibraryEmpty"
-        style="@style/Text.TextViewBtn"
+        style="@style/Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_28"
+        android:layout_marginTop="@dimen/margin_16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivContainer"
+        app:layout_constraintTop_toBottomOf="@id/til_search"
         android:text="@string/library_is_empty"
         android:visibility="gone"/>
 
@@ -81,11 +58,11 @@
         android:layout_width="44dp"
         android:layout_height="44dp"
         android:layout_marginTop="140dp"
-        android:indeterminateTint="@color/brown_2"
+        android:indeterminateTint="@color/brown"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/til_search"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddBook"
@@ -93,7 +70,7 @@
         android:layout_height="68dp"
         android:layout_marginEnd="@dimen/margin_22"
         android:layout_marginBottom="@dimen/margin_22"
-        app:backgroundTint="@color/brown_2"
+        app:backgroundTint="@color/brown"
         android:foreground="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

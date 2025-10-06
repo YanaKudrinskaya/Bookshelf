@@ -32,6 +32,4 @@
             app:destination="@id/navigation_graph"
             app:popUpTo="@id/auth_graph"/>
     </fragment>
-
-
 </navigation>

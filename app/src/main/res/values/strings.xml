@@ -49,5 +49,9 @@
     <string name="content_is_empty">В книге пока ничего нет</string>
     <string name="book_saved">Книга сохранена</string>
 
-
+    <string name="from_gallery">Из галереи</string>
+    <string name="take_photo">Сделать фото</string>
+    <string name="by_default">По умолчанию</string>
+    <string name="cancel">Отмена</string>
+    <string name="select">Выберите источник</string>
 </resources>

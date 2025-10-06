@@ -5,7 +5,8 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".root.ui.activity.RootActivity">
+    tools:context=".root.ui.activity.RootActivity"
+    android:background="@color/very_light_brown">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/rootFragmentContainerView"
@@ -20,7 +21,7 @@
         app:navGraph="@navigation/main_graph" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        style="@style/Text.BottomNavText"
+        style="@style/BottomNav"
         android:id="@+id/bottomNavigationView"
         android:visibility="gone"
         android:layout_width="0dp"
