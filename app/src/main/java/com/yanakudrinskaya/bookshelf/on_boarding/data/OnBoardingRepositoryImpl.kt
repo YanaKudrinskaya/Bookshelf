@@ -1,8 +1,8 @@
-package com.yanakudrinskaya.bookshelf.splash.data
+package com.yanakudrinskaya.bookshelf.on_boarding.data
 
 import android.content.Context
 import com.yanakudrinskaya.bookshelf.R
-import com.yanakudrinskaya.bookshelf.splash.domain.OnBoardingRepository
+import com.yanakudrinskaya.bookshelf.on_boarding.domain.OnBoardingRepository
 
 class OnBoardingRepositoryImpl(
     val context: Context

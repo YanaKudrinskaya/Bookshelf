@@ -2,7 +2,6 @@ package com.yanakudrinskaya.bookshelf.profile.ui.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +26,7 @@ import java.io.File
 class ProfileFragment : Fragment() {
 
     private val viewModel by viewModel<ProfileViewModel>()
-    private  var _binding: FragmentProfileBinding? = null
+    private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
     private val pickImageLauncher =
@@ -49,8 +48,8 @@ class ProfileFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parentFragmentManager.setFragmentResultListener("name_change", this) { _, bundle ->
-            val newName = bundle.getString("newName") ?: return@setFragmentResultListener
+        parentFragmentManager.setFragmentResultListener(CHANGE_NAME, this) { _, bundle ->
+            val newName = bundle.getString(NEW_NAME) ?: return@setFragmentResultListener
             viewModel.changeName(newName)
         }
     }
@@ -58,7 +57,8 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?)
+        savedInstanceState: Bundle?
+    )
             : View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
@@ -69,13 +69,6 @@ class ProfileFragment : Fragment() {
 
         setupObservers()
         setupClickListeners()
-        setupData()
-    }
-
-    private fun setupData() {
-        viewModel.checkPermissions()
-        viewModel.loadUserProfile()
-        viewModel.loadAvatar()
     }
 
     private fun setupObservers() {
@@ -109,27 +102,26 @@ class ProfileFragment : Fragment() {
         }
     }
 
-
     private fun setupClickListeners() {
 
         binding.ivAvatar.setOnClickListener {
             showImagePickDialog()
         }
 
-        binding.tvLogoutBtn.setOnClickListener {
+        binding.btnLogout.setOnClickListener {
             viewModel.logout()
             findNavController().navigate(R.id.action_profileFragment_to_auth_graph)
         }
-        binding.ivNameChange.setOnClickListener {
+        binding.tvUserName.setOnClickListener {
             showNameChangeBottomSheet()
         }
     }
 
     private fun showNameChangeBottomSheet() {
         val dialog = ChangeNameBottomSheet().apply {
-            arguments = bundleOf("currentName" to name)
+            arguments = bundleOf(CURRENT_NAME to name)
         }
-        dialog.show(parentFragmentManager, "ChangeNameBottomSheet")
+        dialog.show(parentFragmentManager, CHANGE_NAME_BOTTOM)
     }
 
 
@@ -154,13 +146,17 @@ class ProfileFragment : Fragment() {
         } else if (data.placeholder != null) {
             binding.ivAvatar.setImageResource(data.placeholder)
         }
-
     }
 
     private fun showImagePickDialog() {
-        val options = arrayOf("Из галереи", "Сделать фото", "По умолчанию", "Отмена")
+        val options = arrayOf(
+            requireContext().getString(R.string.from_gallery),
+            requireContext().getString(R.string.take_photo),
+            requireContext().getString(R.string.by_default),
+            requireContext().getString(R.string.cancel)
+        )
         AlertDialog.Builder(requireContext())
-            .setTitle("Выберите источник")
+            .setTitle(requireContext().getString(R.string.select))
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> viewModel.onGallerySelected()
@@ -189,4 +185,10 @@ class ProfileFragment : Fragment() {
         _binding = null
     }
 
+    companion object {
+        private const val CURRENT_NAME = "currentName"
+        private const val CHANGE_NAME_BOTTOM = "ChangeNameBottomSheet"
+        private const val NEW_NAME = "newName"
+        private const val CHANGE_NAME = "name_change"
+    }
 }

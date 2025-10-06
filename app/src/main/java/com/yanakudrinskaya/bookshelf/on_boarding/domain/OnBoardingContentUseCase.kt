@@ -1,6 +1,4 @@
-package com.yanakudrinskaya.bookshelf.splash.domain.impl
-
-import com.yanakudrinskaya.bookshelf.splash.domain.OnBoardingRepository
+package com.yanakudrinskaya.bookshelf.on_boarding.domain
 
 class OnBoardingContentUseCase(
     private val repository: OnBoardingRepository

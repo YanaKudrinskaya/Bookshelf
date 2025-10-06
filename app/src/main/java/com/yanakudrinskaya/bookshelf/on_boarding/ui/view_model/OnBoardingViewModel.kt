@@ -3,7 +3,7 @@ package com.yanakudrinskaya.bookshelf.on_boarding.ui.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.yanakudrinskaya.bookshelf.splash.domain.impl.OnBoardingContentUseCase
+import com.yanakudrinskaya.bookshelf.on_boarding.domain.OnBoardingContentUseCase
 import com.yanakudrinskaya.bookshelf.on_boarding.ui.model.BoardingNavigation
 
 class OnBoardingViewModel (

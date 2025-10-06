@@ -6,22 +6,21 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
-import com.yanakudrinskaya.bookshelf.R
 import com.yanakudrinskaya.bookshelf.add_book.ui.ContentAdapter
-import com.yanakudrinskaya.bookshelf.add_book.ui.models.BookState
-import com.yanakudrinskaya.bookshelf.add_book.ui.models.DialogEvent
+import com.yanakudrinskaya.bookshelf.add_book.ui.models.AddBookScreenState
+import com.yanakudrinskaya.bookshelf.add_book.ui.models.NavigateFragmentEvent
 import com.yanakudrinskaya.bookshelf.add_book.ui.view_model.AddBookViewModel
 import com.yanakudrinskaya.bookshelf.databinding.FragmentAddBookBinding
+import com.yanakudrinskaya.bookshelf.library.domain.models.Author
 import com.yanakudrinskaya.bookshelf.library.domain.models.Work
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class AddBookFragment : Fragment() {
 
@@ -53,23 +52,20 @@ class AddBookFragment : Fragment() {
     }
 
     private fun setupObserves() {
-        viewModel.getContentLiveData().observe(viewLifecycleOwner) {
-            updateContentList(it)
-        }
+        viewModel.getAddBookStateLiveData().observe(viewLifecycleOwner) {
+            when (it) {
+                is AddBookScreenState.Content -> updateContentList(it.content)
+                is AddBookScreenState.Error -> showError(it.e)
+                is AddBookScreenState.Loading -> showLoading()
+                is AddBookScreenState.Success -> showCloseMessage()
+                is AddBookScreenState.NavigateFragment ->
+                    when (it.fragment) {
+                        NavigateFragmentEvent.CONTENT -> {}
+                        NavigateFragmentEvent.AUTHOR -> Log.d("MyLibrary", "Автор не указан")
+                    }
 
-        viewModel.getDialogLiveData().observe(viewLifecycleOwner) {
-            when(it) {
-                DialogEvent.CONTENT -> showAddContentDialog()
-                DialogEvent.AUTHOR -> showAuthorDialog()
-                DialogEvent.TOAST -> showError("Заполните все поля книги")
-            }
-        }
-
-        viewModel.getAddBookLiveData().observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is BookState.Error -> showError(state.e)
-                BookState.Loading -> showLoading()
-                BookState.Success -> showCloseMessage()
+                is AddBookScreenState.AuthorSearchResults -> showAuthorSuggestions(it.authors)
+                is AddBookScreenState.AuthorSelected -> updateAuthorField(it.author)
             }
         }
     }
@@ -96,15 +92,13 @@ class AddBookFragment : Fragment() {
 
     private fun setupListeners() {
 
-        binding.tvAddWorkBtn.setOnClickListener {
-            showAddContentDialog()
-        }
+        binding. fabAddWork.setOnClickListener {       }
 
-        binding.tvSaveBook.setOnClickListener {
+        binding.btnSaveBook.setOnClickListener {
             saveBook()
         }
 
-        binding.etYear.addTextChangedListener(object : TextWatcher {
+        binding.etDate.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -114,60 +108,27 @@ class AddBookFragment : Fragment() {
                 if (input.length == 4) {
                     val year = input.toIntOrNull()
                     if (year == null || year < 1900 || year > 2100) {
-                        binding.etYear.error = "Введите корректный год (1900-2100)"
+                        binding.tilDate.error = "Введите корректный год (1900-2100)"
                     } else {
-                        binding.etYear.error = null
+                        binding.tilDate.error = null
                     }
                 }
             }
 
         })
-    }
 
-    private fun showAddContentDialog() {
-        val bookAuthor = binding.etAuthor.text.toString()
-        val dialogView =
-            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_work, null)
-        val etAuthor = dialogView.findViewById<EditText>(R.id.etWorkAuthor)
-        val etTitle = dialogView.findViewById<EditText>(R.id.etWorkTitle)
+        binding.etAuthor.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-        if (!isAnthology && bookAuthor.isNotEmpty()) {
-            etAuthor.setText(bookAuthor)
-        }
-
-        AlertDialog.Builder(requireContext())
-            .setTitle("Добавить произведение")
-            .setView(dialogView)
-            .setPositiveButton("Добавить") { _, _ ->
-                val workAuthor = etAuthor.text.toString()
-                val workTitle = etTitle.text.toString()
-
-                if (workAuthor.isNotEmpty() && workTitle.isNotEmpty()) {
-                    viewModel.saveWork(Work(workAuthor, workTitle))
-                } else {
-                    Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT)
-                        .show()
+            override fun afterTextChanged(s: Editable?) {
+                s?.let {
+                    if (it.length > 2) {
+                        viewModel.searchAuthors(it.toString())
+                    }
                 }
             }
-            .setNegativeButton("Отмена", null)
-            .show()
-    }
-
-    private fun showAuthorDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Автор не указан")
-            .setMessage("Книга является сборником произведений нескольких авторов?")
-            .setPositiveButton("Да") { _, _ ->
-                isAnthology = true
-                binding.etAuthor.setText("Сборник")
-            }
-            .setNegativeButton("Нет") { _, _ ->
-                isAnthology = false
-                binding.etAuthor.requestFocus()
-                Toast.makeText(requireContext(), "Укажите автора книги", Toast.LENGTH_SHORT).show()
-            }
-            .setCancelable(false)
-            .show()
+        })
     }
 
     private fun updateContentList(list: MutableList<Work>) {
@@ -184,9 +145,27 @@ class AddBookFragment : Fragment() {
         val author = binding.etAuthor.text.toString()
         val title = binding.etTitle.text.toString()
         val publisher = binding.etPublisher.text.toString()
-        val year = binding.etYear.text.toString()
+        val year = binding.etDate.text.toString()
 
         viewModel.saveBook(author, title, publisher, year)
+    }
+
+    private fun showAuthorSuggestions(authors: List<Author>) {
+        val items = authors.map { "${it.lastName} ${it.firstName} ${it.middleName}" }.toTypedArray()
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Выберите автора")
+            .setItems(items) { _, which ->
+                viewModel.selectAuthor(authors[which])
+            }
+            .setNegativeButton("Новый автор") { _, _ ->
+
+            }
+    }
+
+    private fun updateAuthorField(author: Author) {
+        binding.etAuthor.setText("${author.lastName} ${author.firstName} ${author.middleName}".trim())
+        binding.etAuthor.error = null
     }
 
     override fun onDestroyView() {

@@ -73,34 +73,27 @@ class LibraryFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.ivClearBtn.visibility = clearButtonVisibility(s)
+
             }
 
             override fun afterTextChanged(s: Editable?) {
-                searchString = binding.search.text.toString()
+                searchString = binding.etSearch.text.toString()
 
             }
         }
 
-        simpleTextWatcher.let { binding.search.addTextChangedListener(it) }
+        simpleTextWatcher.let { binding.etSearch.addTextChangedListener(it) }
 
-        binding.search.setOnFocusChangeListener { view, hasFocus ->
-            binding.fabAddBook.isVisible =
-                if (hasFocus) false else true
-        }
-
-        binding.ivClearBtn.setOnClickListener {
-            binding.search.setText("")
+        binding.etSearch.setOnFocusChangeListener { view, hasFocus ->
+            binding.fabAddBook.isVisible = !hasFocus
         }
 
         bookListAdapter.onItemClick = { book -> openBook(book) }
-
     }
 
     private fun openBook(book: Book) {
         findNavController().navigate(R.id.action_libraryFragment_to_bookFragment)
     }
-
 
     private fun setupUserData() {
         binding.rvItems.adapter = bookListAdapter
@@ -110,16 +103,26 @@ class LibraryFragment : Fragment() {
     private fun render(state: LibraryState) {
         when (state) {
             is LibraryState.Content -> showLibaryContent(state.books)
-            is LibraryState.Empty -> binding.tvLibraryEmpty.visibility = View.VISIBLE
-            is LibraryState.Error -> Toast.makeText(requireContext(), "Проверьте подключение к интернету", Toast.LENGTH_SHORT).show()
-            is LibraryState.Loading -> showLoading()
+            is LibraryState.Empty -> {
+                showLoading(false)
+                binding.tvLibraryEmpty.visibility = View.VISIBLE
+            }
+            is LibraryState.Error -> {
+                showError()
+            }
+            is LibraryState.Loading -> showLoading(true)
         }
     }
 
-    private fun showLoading() {
-        binding.tvLibraryEmpty.visibility = View.GONE
-        binding.progressBar.visibility = View.VISIBLE
-        binding.rvItems.visibility = View.GONE
+    private fun showLoading(show: Boolean) {
+        binding.tvLibraryEmpty.isVisible = !show
+        binding.progressBar.isVisible = show
+        binding.rvItems.isVisible = !show
+    }
+
+    private fun  showError() {
+        showLoading(false)
+        Toast.makeText(requireContext(), "Не смог загрузить библиотеку", Toast.LENGTH_SHORT).show()
     }
 
     private fun showLibaryContent(bookList: List<Book>) {
@@ -133,13 +136,5 @@ class LibraryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
     }
 }

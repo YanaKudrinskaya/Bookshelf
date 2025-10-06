@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.yanakudrinskaya.bookshelf.R
 import com.yanakudrinskaya.bookshelf.databinding.FragmentRegisterBinding
-import com.yanakudrinskaya.bookshelf.auth.ui.models.EditStatus
 import com.yanakudrinskaya.bookshelf.auth.ui.models.RequestStatus
 import com.yanakudrinskaya.bookshelf.auth.ui.view_model.RegisterViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,11 +41,11 @@ class RegisterFragment : Fragment() {
 
     private fun setupListeners() {
 
-        binding.tvloginBtn.setOnClickListener {
+        binding.btnLogin.setOnClickListener {
             findNavController().navigateUp()
         }
 
-        binding.tvButton.setOnClickListener {
+        binding.btnRegister.setOnClickListener {
             val name = binding.etUserName.text.toString()
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
@@ -85,20 +84,7 @@ class RegisterFragment : Fragment() {
     }
 
     private fun showError(status: RequestStatus.Error) {
-        when (status.status) {
-            EditStatus.NONE -> {}
-            EditStatus.NAME -> {
-                errorEdit(binding.etUserName)
-            }
 
-            EditStatus.EMAIL -> {
-                errorEdit(binding.etEmail)
-            }
-
-            EditStatus.PASSWORD, EditStatus.CONFPASSWORD -> {
-                errorEdit(binding.etPassword)
-            }
-        }
         Toast.makeText(requireContext(), status.message, Toast.LENGTH_SHORT).show()
     }
 

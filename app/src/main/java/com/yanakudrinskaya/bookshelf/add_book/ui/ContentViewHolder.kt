@@ -7,7 +7,13 @@ import com.yanakudrinskaya.bookshelf.library.domain.models.Work
 class ContentViewHolder (private val binding: ItemContentBinding) : RecyclerView.ViewHolder(binding.root)  {
 
     fun bind(item: Work) {
-        binding.tvContentAuthor.text = item.author
+        // Формируем строку со всеми авторами
+        val authorsText = if (item.authors.isNotEmpty()) {
+            item.authors.joinToString(", ") { it.getFullName() }
+        } else {
+            ""
+        }
+        binding.tvContentAuthor.text = authorsText
         binding.tvContentTitle.text = item.title
     }
 }
