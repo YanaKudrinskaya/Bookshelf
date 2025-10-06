@@ -4,9 +4,9 @@ data class Book (
     var id: String = "",
     var filePath: String = "",
     var title: String,
-    var author: String = "",
-    var publisher: String?,
-    var date: String?,
-    var worksId: List<String> = emptyList(),
+    var authors: List<Author> = emptyList(),
+    var publisher: String = "",
+    var date: String = "",
+    var works: List<Work> = emptyList(),
     var readStatus: Boolean = false
 )

@@ -30,7 +30,7 @@ class LibraryViewModel(
                 .getLibrary()
                 .collect { result ->
                     when (result) {
-                        is Result.Failure -> renderState(LibraryState.Error)
+                        is Result.Error -> renderState(LibraryState.Error)
                         is Result.Success -> {
                             if (result.data.isEmpty()) renderState(LibraryState.Empty)
                             else renderState(LibraryState.Content(result.data))

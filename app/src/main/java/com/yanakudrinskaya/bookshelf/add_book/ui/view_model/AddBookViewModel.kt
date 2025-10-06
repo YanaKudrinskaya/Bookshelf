@@ -5,14 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yanakudrinskaya.bookshelf.add_book.ui.models.BookState
+import com.yanakudrinskaya.bookshelf.add_book.ui.models.AddBookScreenState
+import com.yanakudrinskaya.bookshelf.add_book.ui.models.AddWorkScreenState
 import com.yanakudrinskaya.bookshelf.utils.Result
-import com.yanakudrinskaya.bookshelf.add_book.ui.models.DialogEvent
+import com.yanakudrinskaya.bookshelf.add_book.ui.models.NavigateFragmentEvent
 import com.yanakudrinskaya.bookshelf.library.domain.BookshelfInteractor
+import com.yanakudrinskaya.bookshelf.library.domain.models.Author
 import com.yanakudrinskaya.bookshelf.library.domain.models.Book
 import com.yanakudrinskaya.bookshelf.library.domain.models.Work
-import com.yanakudrinskaya.bookshelf.root.ui.model.SingleLiveEvent
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class AddBookViewModel(
@@ -22,50 +24,66 @@ class AddBookViewModel(
     private val contentList = mutableListOf<Work>()
     private val contentIdList = mutableListOf<String>()
 
+    private val selectedAuthorIds = mutableListOf<String>()
+    private val selectedAuthorWork = mutableListOf<Author>()
+
     private var searchJob: Job? = null
 
-    private val contentLiveData = MutableLiveData<MutableList<Work>>()
-    fun getContentLiveData(): LiveData<MutableList<Work>> = contentLiveData
+    private val addBookStateLiveData = MutableLiveData<AddBookScreenState>()
+    fun getAddBookStateLiveData(): LiveData<AddBookScreenState> = addBookStateLiveData
 
-    private val dialogLiveData = SingleLiveEvent<DialogEvent>()
-    fun getDialogLiveData(): SingleLiveEvent<DialogEvent> = dialogLiveData
+    private val addWorkStateLiveData = MutableLiveData<AddWorkScreenState>()
+    fun getAddWorkStateLiveData(): LiveData<AddWorkScreenState> = addWorkStateLiveData
 
-    private val addBookLiveData = MutableLiveData<BookState>()
-    fun getAddBookLiveData(): LiveData<BookState> = addBookLiveData
+    fun selectAuthorToWork(author: Author) {
+        selectedAuthorWork.add(author)
+    }
 
-    fun saveWork(work: Work) {
-        searchJob?.cancel()
+    fun saveWork(title: String) {
+        if (selectedAuthorWork.isEmpty())
+            addWorkStateLiveData.value = AddWorkScreenState.AuthorsIsEmpty
+        else {
+            val work = Work(authors = selectedAuthorWork, title = title)
+            searchJob?.cancel()
+            searchJob = viewModelScope.launch {
 
-        searchJob = viewModelScope.launch {
-            bookshelfInteractor.addWork(work).collect { result ->
-                when (result) {
-                    is Result.Success -> {
-                        Log.d("MyLibrary", "Произведение добавлено в базу данных")
-                        contentList.add(work)
-                        contentIdList.add(result.data)
-                        contentLiveData.value = contentList
+                bookshelfInteractor.addWork(work)
+                    .catch { error ->
+                        val errorString = error.message
+                        Log.d("MyLibrary", errorString.toString())
                     }
+                    .collect { result ->
+                        when (result) {
+                            is Result.Success -> {
+                                Log.d("MyLibrary", "Произведение добавлено в базу данных")
+                                contentList.add(work)
+                                contentIdList.add(result.data!!)
+                                addBookStateLiveData.value = AddBookScreenState.Content(contentList)
+                            }
 
-                    is Result.Failure -> {
-                        Log.d("MyLibrary", "Ошибка сохранения")
+                            is Result.Error -> {
+                                Log.d("MyLibrary", "Ошибка сохранения")
+                            }
+                        }
                     }
-                }
             }
         }
+
     }
 
     fun saveBook(author: String, title: String, publisher: String, year: String) {
 
-        if (author.isEmpty()) {
-            dialogLiveData.value = DialogEvent.AUTHOR
+        /*if (author.isEmpty()) {
+            addBookStateLiveData.value = AddBookScreenState.NavigateFragment(NavigateFragmentEvent.AUTHOR)
             return
         } else if (title.isEmpty() || publisher.isEmpty() || year.isEmpty()) {
-            dialogLiveData.value = DialogEvent.TOAST
+            addBookStateLiveData.value = AddBookScreenState.Error("Заполните все поля книги")
             return
         } else {
-            addBookLiveData.value = BookState.Loading
+            addBookStateLiveData.value = AddBookScreenState.Loading
+            val authors = bookshelfInteractor.getAuthorById(selectedAuthorId!!)
             val book = Book(
-                author = author,
+                authors = author,
                 title = title,
                 publisher = publisher,
                 date = year,
@@ -76,8 +94,69 @@ class AddBookViewModel(
             searchJob = viewModelScope.launch {
                 bookshelfInteractor.addBook(book).collect { result ->
                     when (result) {
-                        is Result.Failure -> addBookLiveData.value = BookState.Error("Ошибка сохранения")
-                        is Result.Success -> addBookLiveData.value = BookState.Success
+                        is Result.Failure -> addBookStateLiveData.value = AddBookScreenState.Error("Ошибка сохранения")
+                        is Result.Success -> addBookStateLiveData.value = AddBookScreenState.Success
+                    }
+                }
+            }
+        }*/
+    }
+
+    fun searchAuthors(query: String) {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            bookshelfInteractor.searchAuthors(query)
+                .collect { result ->
+                    when (result) {
+                        is Result.Success -> {
+                            // Обновляем UI с результатами поиска
+                            addBookStateLiveData.value =
+                                AddBookScreenState.AuthorSearchResults(result.data!!)
+                        }
+
+                        is Result.Error -> {
+                            // Обработка ошибки
+                        }
+                    }
+                }
+        }
+    }
+
+    fun selectAuthor(author: Author) {
+        selectedAuthorIds.add(author.id)
+        // Обновляем UI с выбранным автором
+        addBookStateLiveData.value = AddBookScreenState.AuthorSelected(author)
+    }
+
+    fun searchWorksByAuthor(authorId: String) {
+        viewModelScope.launch {
+            bookshelfInteractor.searchWorksByAuthor(authorId)
+                .collect { result ->
+                    when (result) {
+                        is Result.Success -> {
+                            addWorkStateLiveData.value =
+                                AddWorkScreenState.WorksSearchResults(result.data!!)
+                        }
+
+                        is Result.Error -> {
+                            // Обработка ошибки
+                        }
+                    }
+                }
+        }
+    }
+
+    fun addAuthor(author: Author) {
+        viewModelScope.launch {
+            bookshelfInteractor.addAuthor(author).collect { result ->
+                when (result) {
+                    is Result.Success -> {
+                        Log.d("MyLibrary", "Сохраняем автора ${author.lastName}")
+                        selectAuthor(author) // Автоматически выбираем только что добавленного автора
+                    }
+
+                    is Result.Error -> {
+                        // Обработка ошибки
                     }
                 }
             }
