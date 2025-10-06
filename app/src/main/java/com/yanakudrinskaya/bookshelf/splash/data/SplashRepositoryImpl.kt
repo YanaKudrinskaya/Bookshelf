@@ -1,8 +1,10 @@
 package com.yanakudrinskaya.bookshelf.splash.data
 
 import android.content.SharedPreferences
-import com.yanakudrinskaya.bookshelf.auth.data.IS_FIRST_LAUNCH
 import com.yanakudrinskaya.bookshelf.splash.domain.SplashRepository
+
+const val APP_PREFERENCES = "app_prefs"
+const val IS_FIRST_LAUNCH = "is_first_launch"
 
 class SplashRepositoryImpl (
     private val sharedPreferences: SharedPreferences,

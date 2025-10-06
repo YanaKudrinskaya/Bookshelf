@@ -7,21 +7,23 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.core.content.ContextCompat
-import com.yanakudrinskaya.bookshelf.auth.domain.NetworkMonitorRepository
 
-class NetworkMonitorRepositoryImpl (
+class NetworkMonitor (
     private val context: Context,
     private val connectivityManager: ConnectivityManager
-) : NetworkMonitorRepository {
+) {
 
-    suspend override fun isNetworkAvailable(): Boolean {
+    fun isNetworkAvailable(): Boolean {
 
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_NETWORK_STATE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return false
+        // Проверяем разрешение только для API >= 23 (Marshmallow)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_NETWORK_STATE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return true // Или false в зависимости от требований
+            }
         }
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

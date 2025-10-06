@@ -1,46 +1,62 @@
 package com.yanakudrinskaya.bookshelf.auth.ui.view_model
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yanakudrinskaya.bookshelf.auth.domain.AuthInteractor
 import com.yanakudrinskaya.bookshelf.utils.Result
-import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileInteractor
-import com.yanakudrinskaya.bookshelf.auth.ui.models.EditStatus
-
 import com.yanakudrinskaya.bookshelf.auth.ui.models.RequestStatus
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val userProfileInteractor: UserProfileInteractor
+    private val authInteractor: AuthInteractor
 ) : ViewModel() {
-
 
     private val requestStatusLiveData = MutableLiveData<RequestStatus>()
     fun getRequestStatusLiveData(): LiveData<RequestStatus> = requestStatusLiveData
 
+    private val fieldErrorsLiveData = MutableLiveData<Pair<String, String>?>()
+    fun getFieldErrorsLiveData(): LiveData<Pair<String, String>?> = fieldErrorsLiveData
 
     fun processRequest(email: String, password: String) {
+        if (validateFields(email, password)) {
             login(email, password)
+        }
     }
 
+    private fun validateFields(email: String, password: String): Boolean {
+        val emailError = if (email.isEmpty()) "Введите email" else null
+        val passwordError = if (password.isEmpty()) "Введите пароль" else null
+
+        if (emailError != null || passwordError != null) {
+            fieldErrorsLiveData.postValue(Pair(emailError ?: "", passwordError ?: ""))
+            return false
+        }
+
+        // Дополнительная валидация email формата
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            fieldErrorsLiveData.postValue(Pair("Неверный формат email", ""))
+            return false
+        }
+
+        fieldErrorsLiveData.postValue(null)
+        return true
+    }
 
     private fun login(email: String, password: String) {
 
         if (email.isNotEmpty() && password.isNotEmpty()) {
             viewModelScope.launch {
-                userProfileInteractor.login(email, password).let { result ->
+                authInteractor.login(email, password).let { result ->
                     when (result) {
                         is Result.Success -> {
-                            Log.d("Myregister", "Авторизация прошла успешно")
                             requestStatusLiveData.postValue(
                                 RequestStatus.Success
                             )
                         }
 
-                        is Result.Failure -> {
-                            Log.d("Myregister", "Ошибка авторизации")
+                        is Result.Error -> {
                             requestStatusLiveData.postValue(RequestStatus.Error("Ошибка авторизации"))
                         }
                     }
@@ -49,7 +65,7 @@ class LoginViewModel(
             }
         } else {
             requestStatusLiveData.postValue(
-                RequestStatus.Error("Заполните все поля", EditStatus.PASSWORD)
+                RequestStatus.Error("Заполните все поля")
             )
         }
     }

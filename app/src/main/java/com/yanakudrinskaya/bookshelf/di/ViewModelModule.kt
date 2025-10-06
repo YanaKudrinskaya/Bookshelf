@@ -9,7 +9,7 @@ import com.yanakudrinskaya.bookshelf.auth.ui.view_model.RegisterViewModel
 import com.yanakudrinskaya.bookshelf.profile.ui.view_model.ProfileViewModel
 import com.yanakudrinskaya.bookshelf.root.ui.view_model.RootViewModel
 import com.yanakudrinskaya.bookshelf.splash.ui.view_model.SplashViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
@@ -19,19 +19,22 @@ val viewModelModule = module {
     }
 
     viewModel {
-        SplashViewModel(get(), get())
+        SplashViewModel(
+            authInteractor = get(),
+            splashUseCase = get()
+        )
     }
 
     viewModel {
-        OnBoardingViewModel(get())
+        OnBoardingViewModel(onBoardingUseCase = get())
     }
 
     viewModel {
-        LoginViewModel(get())
+        LoginViewModel(authInteractor = get())
     }
 
     viewModel {
-        LibraryViewModel(get())
+        LibraryViewModel(bookshelfInteractor = get())
     }
 
     viewModel {
@@ -39,15 +42,18 @@ val viewModelModule = module {
     }
 
     viewModel {
-        ProfileViewModel(get(), get(), get())
+        ProfileViewModel(
+            avatarInteractor = get(),
+            fileManagerInteractor = get(),
+            authInteractor = get())
     }
 
     viewModel {
-        AddBookViewModel(get())
+        AddBookViewModel(bookshelfInteractor = get())
     }
 
     viewModel {
-        RegisterViewModel(get())
+        RegisterViewModel(authInteractor = get())
     }
 
 }

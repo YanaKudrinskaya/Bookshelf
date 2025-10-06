@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yanakudrinskaya.bookshelf.auth.domain.models.UserCurrent
 import com.yanakudrinskaya.bookshelf.profile.domain.AvatarInteractor
 import com.yanakudrinskaya.bookshelf.profile.ui.model.UserState
 import kotlinx.coroutines.launch
@@ -19,16 +18,17 @@ import com.yanakudrinskaya.bookshelf.profile.domain.FileManagerInteractor
 import com.yanakudrinskaya.bookshelf.profile.ui.model.PermissionState
 import android.content.pm.PackageManager
 import android.util.Log
-import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileInteractor
+import com.yanakudrinskaya.bookshelf.auth.domain.AuthInteractor
+import com.yanakudrinskaya.bookshelf.auth.domain.models.User
 
-class ProfileViewModel (
+class ProfileViewModel(
     private val avatarInteractor: AvatarInteractor,
     private val fileManagerInteractor: FileManagerInteractor,
-    private var userProfileInteractor: UserProfileInteractor,
+    private var authInteractor: AuthInteractor,
 ) : ViewModel() {
 
     private val userLiveData = MutableLiveData<UserState>()
-    fun getUserLiveData() : LiveData<UserState> = userLiveData
+    fun getUserLiveData(): LiveData<UserState> = userLiveData
 
     private val imagePickEvent = MutableLiveData<ImagePickEvent>()
     fun getImagePickEvent(): LiveData<ImagePickEvent> = imagePickEvent
@@ -39,30 +39,59 @@ class ProfileViewModel (
     private lateinit var currentPhotoPath: String
     private val PERMISSIONS_REQUEST = 100
 
+    private lateinit var user: User
+    private var currentAvatarPath: String? = null
+
+    init {
+        loadUserProfile()
+        checkPermissions()
+    }
+
     fun logout() {
-        userProfileInteractor.logout()
+        authInteractor.logout()
     }
 
     fun loadUserProfile() {
-        userLiveData.value = UserState(
-            name = UserCurrent.name,
-            email = UserCurrent.email,
-            placeholder = avatarInteractor.getPlaceholder(),
-        )
+        viewModelScope.launch {
+            authInteractor.getCurrentUser().collect { result ->
+                when (result) {
+                    is Result.Error -> {
+                        Log.e("ProfileViewModel", "Error loading user: ${result.message}")
+                        userLiveData.value = UserState(
+                            name = "",
+                            email = "",
+                            placeholder = avatarInteractor.getPlaceholder()
+                        )
+                    }
+
+                    is Result.Success -> {
+                        user = result.data
+                        userLiveData.value = UserState(
+                            name = user.name,
+                            email = user.email,
+                            placeholder = avatarInteractor.getPlaceholder()
+                        )
+                        loadAvatar()
+                    }
+                }
+            }
+        }
+
     }
 
     fun loadAvatar() {
-        viewModelScope.launch {
-            avatarInteractor.loadAvatar(UserCurrent.id)?.let { avatar ->
-                userLiveData.value = getCurrentPlayStatus().copy(filePath = avatar.filePath, avatarIsChange = true)
-            } ?: run {
-                userLiveData.value = getCurrentPlayStatus().copy(filePath = null)
-            }
+        val avatar = avatarInteractor.loadAvatar(user.userId)
+        if (avatar?.filePath != currentAvatarPath) {
+            currentAvatarPath = avatar?.filePath
+            userLiveData.value = getCurrentPlayStatus().copy(
+                filePath = currentAvatarPath,
+                avatarIsChange = true
+            )
         }
     }
 
     fun deleteAvatar() {
-        avatarInteractor.deleteAvatar(UserCurrent.id)
+        avatarInteractor.deleteAvatar(user.userId)
         userLiveData.value = getCurrentPlayStatus().copy(filePath = null, avatarIsChange = true)
     }
 
@@ -103,16 +132,17 @@ class ProfileViewModel (
     fun processSelectedImage(uri: Uri?, fromCamera: Boolean) {
         viewModelScope.launch {
             val success = if (fromCamera) {
-                avatarInteractor.saveAvatarFromCamera(UserCurrent.id, currentPhotoPath)
+                avatarInteractor.saveAvatarFromCamera(user.userId, currentPhotoPath)
             } else {
-                uri?.let { avatarInteractor.saveAvatarFromUri(UserCurrent.id, it) } ?: false
+                uri?.let { avatarInteractor.saveAvatarFromUri(user.userId, it) } ?: false
             }
 
             if (success) {
                 loadAvatar()
             } else {
                 imagePickEvent.value = ImagePickEvent.Error(
-                    "Ошибка сохранения")
+                    "Ошибка сохранения"
+                )
             }
         }
     }
@@ -135,12 +165,14 @@ class ProfileViewModel (
                     is Result.Success -> {
                         imagePickEvent.value = ImagePickEvent.FromCamera(uriResult.data)
                     }
-                    is Result.Failure -> {
-                        imagePickEvent.value = ImagePickEvent.Error(uriResult.exception.message ?: "")
+
+                    is Result.Error -> {
+                        imagePickEvent.value = ImagePickEvent.Error("")
                     }
                 }
             }
-            is Result.Failure -> imagePickEvent.value = ImagePickEvent.Error(result.exception.message ?: "")
+
+            is Result.Error -> imagePickEvent.value = ImagePickEvent.Error("")
         }
     }
 
@@ -155,16 +187,22 @@ class ProfileViewModel (
     fun changeName(name: String) {
         if (name.isNotEmpty()) {
             viewModelScope.launch {
-                userProfileInteractor.changeUserName(name).let { result ->
+                authInteractor.updateUserName(name).let { result ->
                     when (result) {
                         is Result.Success -> {
                             Log.d("Myregister", "Изменение имени пользователя прошло успешно")
-                            userLiveData.value = getCurrentPlayStatus().copy(name = UserCurrent.name, avatarIsChange = false)
+                            user = result.data
+                            userLiveData.postValue(
+                                getCurrentPlayStatus().copy(
+                                    name = user.name,
+                                    avatarIsChange = false
+                                )
+                            )
                         }
 
-                        is Result.Failure -> {
+                        is Result.Error -> {
                             Log.d("Myregister", "Ошибка")
-                            imagePickEvent.value = ImagePickEvent.Error(result.exception.message ?: "")
+                            imagePickEvent.postValue(ImagePickEvent.Error(""))
                         }
                     }
                 }

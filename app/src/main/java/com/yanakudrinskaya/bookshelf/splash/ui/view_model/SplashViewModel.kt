@@ -1,18 +1,17 @@
 package com.yanakudrinskaya.bookshelf.splash.ui.view_model
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yanakudrinskaya.bookshelf.auth.domain.AuthInteractor
+import com.yanakudrinskaya.bookshelf.splash.domain.SplashUseCase
+import com.yanakudrinskaya.bookshelf.splash.ui.models.NavigationEvent
 import com.yanakudrinskaya.bookshelf.utils.Result
-import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileInteractor
-import com.yanakudrinskaya.bookshelf.splash.domain.use_cases.SplashUseCase
-import com.yanakudrinskaya.bookshelf.splash.ui.model.NavigationEvent
 import kotlinx.coroutines.launch
 
-class SplashViewModel (
-    private val userProfileInteractor: UserProfileInteractor,
+class SplashViewModel(
+    private val authInteractor: AuthInteractor,
     private val splashUseCase: SplashUseCase
 ) : ViewModel() {
 
@@ -33,13 +32,12 @@ class SplashViewModel (
 
     private fun checkAuth() {
         viewModelScope.launch {
-            userProfileInteractor.getCurrentUser().let { result ->
+            authInteractor.getCurrentUser().collect { result ->
                 when (result) {
                     is Result.Success -> {
                         navigationLiveData.value = NavigationEvent.MAIN
                     }
-                    is Result.Failure -> {
-                        Log.d("Myregister", "Ошибка ${result.exception}")
+                    is Result.Error -> {
                         navigationLiveData.value = NavigationEvent.LOGIN
                     }
                 }

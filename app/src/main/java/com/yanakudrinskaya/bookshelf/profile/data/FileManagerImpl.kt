@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Environment
 import androidx.core.content.FileProvider
 import com.yanakudrinskaya.bookshelf.profile.domain.FileManager
+import com.yanakudrinskaya.bookshelf.utils.ResponseStatus
 import java.io.File
 import java.io.IOException
 import java.util.Date
@@ -45,7 +46,7 @@ class FileManagerImpl(
             val tempFile = createTempFile()
             Result.Success(tempFile.absolutePath)
         } catch (e: IOException) {
-            Result.Failure(e)
+            Result.Error(ResponseStatus.UNKNOWN_ERROR)
         }
     }
 
@@ -59,7 +60,7 @@ class FileManagerImpl(
             )
             Result.Success(uri)
         } catch (e: Exception) {
-            Result.Failure(e)
+            Result.Error(ResponseStatus.UNKNOWN_ERROR)
         }
     }
 

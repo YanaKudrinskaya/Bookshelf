@@ -1,6 +1,4 @@
-package com.yanakudrinskaya.bookshelf.splash.domain.use_cases
-
-import com.yanakudrinskaya.bookshelf.splash.domain.SplashRepository
+package com.yanakudrinskaya.bookshelf.splash.domain
 
 class SplashUseCase(
     private val repository: SplashRepository

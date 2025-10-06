@@ -1,78 +1,53 @@
 package com.yanakudrinskaya.bookshelf.auth.data
 
 import android.content.SharedPreferences
-import android.util.Log
-import com.google.gson.Gson
+import com.yanakudrinskaya.bookshelf.auth.data.mappers.UserSharedPrefsMapper
 import com.yanakudrinskaya.bookshelf.utils.Result
 import com.yanakudrinskaya.bookshelf.auth.domain.models.User
 import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileRepository
-import com.yanakudrinskaya.bookshelf.auth.domain.models.UserCurrent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.yanakudrinskaya.bookshelf.utils.ResponseStatus
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import androidx.core.content.edit
 
 const val APP_PREFERENCES = "app_prefs"
-const val IS_FIRST_LAUNCH = "is_first_launch"
 const val KEY_USER_PROFILE = "user_profile"
-const val KEY_BOOKSHELF = "bookshelf"
-const val KEY_BOOKS = "books"
-const val KEY_WORKS = "works"
 
 class UserProfileRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
-    private val gson: Gson
+    private val userSharedPrefsMapper: UserSharedPrefsMapper
 ) : UserProfileRepository {
 
-    override suspend fun saveLocalUserProfile(user: User) {
-        withContext(Dispatchers.IO) {
-            try {
-                val userJson = gson.toJson(user)
-                sharedPreferences.edit()
-                    .putString(KEY_USER_PROFILE, userJson)
-                    .apply()
-                Log.d("Myregister", "User profile saved successfully")
-                saveCurrentUser(user)
+    private val userFlow = MutableStateFlow<Result<User>>(getLocalUserProfile())
+    fun getUserFlow(): StateFlow<Result<User>> = userFlow
 
-            } catch (e: Exception) {
-                Log.e("Myregister", "Error saving user profile", e)
-            }
+    override fun saveLocalUserProfile(user: User) {
+        val userJson = userSharedPrefsMapper.userToJson(user)
+        sharedPreferences.edit {
+            putString(KEY_USER_PROFILE, userJson)
         }
+
+        userFlow.value = Result.Success(user)
     }
 
-    override suspend fun getLocalUserProfile(): Result<User> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val userJson = sharedPreferences.getString(KEY_USER_PROFILE, null)
-                userJson?.let { json ->
-                    gson.fromJson(json, User::class.java).let { user ->
-                        Result.Success(user).also {
-                            Log.d("Myregister", "User profile loaded successfully")
-                        }
-                    }
-                }
-                    ?: Result.Failure(NoSuchElementException("User profile not found in local storage"))
-            } catch (e: Exception) {
-                Log.e("Myregister", "Error loading user profile", e)
-                Result.Failure(e)
+    override fun getLocalUserProfile(): Result<User> {
+        val userJson = sharedPreferences.getString(KEY_USER_PROFILE, null)
+        return userJson?.let { json ->
+            userSharedPrefsMapper.jsonToUser(json)?.let { user ->
+                Result.Success(user)
             }
+        } ?: run {
+            Result.Error(ResponseStatus.NOT_FOUND, "User not found in local storage")
         }
     }
+    override fun getLocalUserProfileStream(): Flow<Result<User>> = getUserFlow()
+
 
     override fun deleteProfile() {
-        try {
-            sharedPreferences.edit()
-                .remove(KEY_USER_PROFILE)
-                .apply()
-            Log.d("Myregister", "User profile deleted successfully")
-        } catch (e: Exception) {
-            Log.e("Myregister", "Error deleting user profile", e)
+        sharedPreferences.edit {
+            remove(KEY_USER_PROFILE)
         }
-    }
-
-    private fun saveCurrentUser(user: User) {
-        UserCurrent.id = user.userId
-        UserCurrent.name = user.name
-        UserCurrent.email = user.email
-        UserCurrent.bookshelfId = user.bookshelfId
-        UserCurrent.readBooks = user.readBooks
+        userFlow.value = Result.Error(ResponseStatus.NOT_FOUND, "User profile deleted")
     }
 }
