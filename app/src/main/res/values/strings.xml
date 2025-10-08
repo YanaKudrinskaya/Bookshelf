@@ -54,4 +54,6 @@
     <string name="by_default">По умолчанию</string>
     <string name="cancel">Отмена</string>
     <string name="select">Выберите источник</string>
+
+    <string name="default_web_client_id">535793210417-7anfdtlr3edgrq6ekul5jvllcbkftu2t.apps.googleusercontent.com</string>
 </resources>
