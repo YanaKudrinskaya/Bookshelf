@@ -19,6 +19,9 @@ class LoginViewModel(
     private val fieldErrorsLiveData = MutableLiveData<Pair<String, String>?>()
     fun getFieldErrorsLiveData(): LiveData<Pair<String, String>?> = fieldErrorsLiveData
 
+    private val loadingLiveData = MutableLiveData<Boolean>()
+    fun getLoadingLiveData(): LiveData<Boolean> = loadingLiveData
+
     fun processRequest(email: String, password: String) {
         if (validateFields(email, password)) {
             login(email, password)
@@ -34,11 +37,11 @@ class LoginViewModel(
             return false
         }
 
-        // Дополнительная валидация email формата
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            fieldErrorsLiveData.postValue(Pair("Неверный формат email", ""))
-            return false
-        }
+//        // Дополнительная валидация email формата
+//        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+//            fieldErrorsLiveData.postValue(Pair("Неверный формат email", ""))
+//            return false
+//        }
 
         fieldErrorsLiveData.postValue(null)
         return true
@@ -67,6 +70,27 @@ class LoginViewModel(
             requestStatusLiveData.postValue(
                 RequestStatus.Error("Заполните все поля")
             )
+        }
+    }
+
+    fun signInWithGoogle(idToken: String) {
+        loadingLiveData.postValue(true)
+        viewModelScope.launch {
+            authInteractor.signInWithGoogle(idToken).let { result ->
+                loadingLiveData.postValue(false)
+                when (result) {
+                    is Result.Success -> {
+                        requestStatusLiveData.postValue(RequestStatus.Success)
+                    }
+                    is Result.Error -> {
+                        requestStatusLiveData.postValue(
+                            RequestStatus.Error(
+                                result.message ?: "Google sign in failed"
+                            )
+                        )
+                    }
+                }
+            }
         }
     }
 }

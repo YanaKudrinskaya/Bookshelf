@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.yanakudrinskaya.bookshelf.auth.data.AuthProvider
+import com.yanakudrinskaya.bookshelf.auth.data.network.AuthProvider
 import com.yanakudrinskaya.bookshelf.auth.data.mappers.UserFirestoreMapper
 import com.yanakudrinskaya.bookshelf.auth.domain.models.User
 import com.yanakudrinskaya.bookshelf.utils.Result

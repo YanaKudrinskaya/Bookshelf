@@ -19,6 +19,14 @@ class AuthInteractorImpl(
         return authRepository.login(email, password)
     }
 
+    override suspend fun signInWithGoogle(idToken: String): Result<User> {
+        return authRepository.signInWithGoogle(idToken)
+    }
+
+    override suspend fun linkWithGoogle(idToken: String): Result<User> {
+        return authRepository.linkWithGoogle(idToken)
+    }
+
     override fun getCurrentUser(): Flow<Result<User>> = authRepository.getCurrentUser()
 
 

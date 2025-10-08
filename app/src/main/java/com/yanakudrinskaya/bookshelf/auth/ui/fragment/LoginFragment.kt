@@ -8,13 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yanakudrinskaya.bookshelf.R
 import com.yanakudrinskaya.bookshelf.databinding.FragmentLoginBinding
 import com.yanakudrinskaya.bookshelf.auth.ui.models.RequestStatus
 import com.yanakudrinskaya.bookshelf.auth.ui.view_model.LoginViewModel
+import com.yanakudrinskaya.bookshelf.auth.utils.GoogleCredentialManager
 import com.yanakudrinskaya.bookshelf.root.ui.NavigationVisibilityController
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : Fragment() {
@@ -23,6 +26,10 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel by viewModel<LoginViewModel>()
+
+    private val googleCredentialManager by lazy {
+        GoogleCredentialManager(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,17 +65,20 @@ class LoginFragment : Fragment() {
             val password = binding.etPassword.text.toString().trim()
             viewModel.processRequest(email, password)
         }
+
+        binding.signInButton.setOnClickListener {
+            signInWithGoogle()
+        }
     }
 
     private fun setupObserves() {
 
         viewModel.getFieldErrorsLiveData().observe(viewLifecycleOwner) { errors ->
             errors?.let { (emailError, passwordError) ->
-                // Устанавливаем ошибки для полей
+
                 binding.tilEmail.error = if (emailError.isNotEmpty()) emailError else null
                 binding.tilPassword.error = if (passwordError.isNotEmpty()) passwordError else null
 
-                // Меняем цвет рамки (опционально)
                 if (emailError.isNotEmpty()) {
                     binding.tilEmail.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.error)
                 }
@@ -76,18 +86,11 @@ class LoginFragment : Fragment() {
                     binding.tilPassword.boxStrokeColor = ContextCompat.getColor(requireContext(), R.color.error)
                 }
             } ?: run {
-                // Очищаем ошибки
                 binding.tilEmail.error = null
                 binding.tilPassword.error = null
-                // Восстанавливаем стандартный цвет рамки
-//                binding.tilPassword.setBoxStrokeColorStateList(
-//                    ContextCompat.getColorStateList(requireContext(), R.color.selector_text_input_stroke)
-//                )
-//                binding.tilEmail.setBoxStrokeColorStateList(
-//                    ContextCompat.getColorStateList(requireContext(), R.color.selector_text_input_stroke)
-//                )
             }
         }
+
         viewModel.getRequestStatusLiveData().observe(viewLifecycleOwner) { status ->
             when (status) {
                 is RequestStatus.Error -> {
@@ -102,15 +105,11 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupTextWatchers() {
-        // Очищаем ошибки при вводе текста
         binding.etEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 binding.tilEmail.error = null
-//                binding.tilEmail.setBoxStrokeColorStateList(
-//                    ContextCompat.getColorStateList(requireContext(), R.color.selector_text_input_stroke)
-//                )
             }
         })
 
@@ -119,9 +118,6 @@ class LoginFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 binding.tilPassword.error = null
-//                binding.tilPassword.setBoxStrokeColorStateList(
-//                    ContextCompat.getColorStateList(requireContext(), R.color.selector_text_input_stroke)
-//                )
             }
         })
     }
@@ -134,6 +130,24 @@ class LoginFragment : Fragment() {
             .show()
     }
 
+    private fun signInWithGoogle() {
+        lifecycleScope.launch {
+            showLoading(true)
+            val idToken = googleCredentialManager.signInWithGoogle(requireActivity())
+
+            if (idToken != null) {
+                viewModel.signInWithGoogle(idToken)
+            } else {
+                showError("Google sign in failed")
+                showLoading(false)
+            }
+        }
+    }
+    
+    private fun showLoading(show: Boolean) {
+        binding.progressBar.visibility = if (show) View.VISIBLE else View.GONE
+        binding.signInButton.isEnabled = !show
+    }
     override fun onDestroyView() {
         (activity as? NavigationVisibilityController)?.setNavigationVisibility(true)
         super.onDestroyView()

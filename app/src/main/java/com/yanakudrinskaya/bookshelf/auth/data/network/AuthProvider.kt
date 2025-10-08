@@ -1,4 +1,4 @@
-package com.yanakudrinskaya.bookshelf.auth.data
+package com.yanakudrinskaya.bookshelf.auth.data.network
 
 import com.yanakudrinskaya.bookshelf.auth.domain.models.User
 import com.yanakudrinskaya.bookshelf.utils.Result

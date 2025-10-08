@@ -8,6 +8,16 @@
     android:paddingVertical="@dimen/margin_60"
     tools:context=".auth.ui.fragment.LoginFragment">
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
         android:id="@+id/tv_welcome"
         style="@style/Text.32"
@@ -79,6 +89,17 @@
         app:layout_constraintTop_toBottomOf="@id/til_password"
         android:text="@string/login_btn" />
 
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_16"
+        app:layout_constraintStart_toStartOf="@id/tv_welcome"
+        app:layout_constraintEnd_toEndOf="@id/tv_welcome"
+        app:layout_constraintTop_toBottomOf="@id/btn_login"
+        />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_register"
         style="@style/ButtonBorderless"
@@ -86,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_16"
         android:text="@string/register_btn"
-        app:layout_constraintTop_toBottomOf="@id/btn_login"
+        app:layout_constraintTop_toBottomOf="@id/sign_in_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

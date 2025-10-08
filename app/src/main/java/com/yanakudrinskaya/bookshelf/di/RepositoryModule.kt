@@ -6,6 +6,7 @@ import com.yanakudrinskaya.bookshelf.auth.data.AuthRepositoryImpl
 import com.yanakudrinskaya.bookshelf.auth.data.UserProfileRepositoryImpl
 import com.yanakudrinskaya.bookshelf.auth.domain.AuthRepository
 import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileRepository
+import com.yanakudrinskaya.bookshelf.auth.utils.GoogleCredentialManager
 import com.yanakudrinskaya.bookshelf.library.data.ResourcesProviderRepositoryImpl
 import com.yanakudrinskaya.bookshelf.library.data.FirebaseBookshelfRepositoryImpl
 import com.yanakudrinskaya.bookshelf.library.domain.BookshelfRepository
@@ -25,7 +26,8 @@ val repositoryModule = module {
         AuthRepositoryImpl(
             authProvider = get(),
             localDataSource = get(),
-            networkMonitor = get()
+            networkMonitor = get(),
+            googleAuthProvider = get()
         )
     }
 
@@ -70,5 +72,9 @@ val repositoryModule = module {
             get(),
             get()
         )
+    }
+
+    single {
+        GoogleCredentialManager(androidContext())
     }
 }

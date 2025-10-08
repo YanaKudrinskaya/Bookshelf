@@ -66,6 +66,6 @@ class BookListViewHolder(private val binding: ItemBookBinding) :
                 R.color.brown
             )
         )
-        else ColorStateList.valueOf(ContextCompat.getColor(context, R.color.gray))
+        else ColorStateList.valueOf(ContextCompat.getColor(context, R.color.grey))
     }
 }
