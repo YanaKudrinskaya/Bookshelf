@@ -1,9 +1,27 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Bookshelf" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+    <style name="Theme.Bookshelf" parent="Theme.MaterialComponents.DayNight.NoActionBar" >
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+
+        <!-- Background Colors -->
+        <item name="android:colorBackground">@color/very_light_brown</item>
+
+        <!-- Status Bar -->
+        <item name="android:statusBarColor">?attr/colorOnPrimary</item>
+
+        <!-- Navigation Bar -->
+        <item name="android:navigationBarColor">@color/very_light_brown</item>
+
+        <!-- Primary Brand Color -->
+        <item name="colorPrimary">@color/brown</item>
+        <item name="colorPrimaryVariant">@color/dark_brown</item>
+        <item name="colorOnPrimary">@color/very_light_brown</item>
+        <!-- Secondary Brand Color -->
+        <item name="colorSecondary">@color/very_light_brown</item>
+        <item name="colorSecondaryVariant">@color/light_brown</item>
+        <item name="colorOnSecondary">@color/brown_45</item>
+
+        <item name="colorError">@color/error</item>
     </style>
 
-    <style name="Theme.Bookshelf" parent="Base.Theme.Bookshelf" />
 </resources>
