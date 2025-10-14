@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yanakudrinskaya.bookshelf.auth.domain.AuthInteractor
+import com.yanakudrinskaya.bookshelf.auth.domain.api.AuthInteractor
 import com.yanakudrinskaya.bookshelf.splash.domain.SplashUseCase
 import com.yanakudrinskaya.bookshelf.splash.ui.models.NavigationEvent
 import com.yanakudrinskaya.bookshelf.utils.Result
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class SplashViewModel(
@@ -32,14 +33,14 @@ class SplashViewModel(
 
     private fun checkAuth() {
         viewModelScope.launch {
-            authInteractor.getCurrentUser().collect { result ->
-                when (result) {
-                    is Result.Success -> {
-                        navigationLiveData.value = NavigationEvent.MAIN
-                    }
-                    is Result.Error -> {
-                        navigationLiveData.value = NavigationEvent.LOGIN
-                    }
+            // Используем first() чтобы взять только первый результат
+            val result = authInteractor.getCurrentUser().first()
+            when (result) {
+                is Result.Success -> {
+                    navigationLiveData.value = NavigationEvent.MAIN
+                }
+                is Result.Error -> {
+                    navigationLiveData.value = NavigationEvent.LOGIN
                 }
             }
         }

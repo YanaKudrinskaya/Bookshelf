@@ -4,12 +4,12 @@ import android.content.SharedPreferences
 import com.yanakudrinskaya.bookshelf.auth.data.mappers.UserSharedPrefsMapper
 import com.yanakudrinskaya.bookshelf.utils.Result
 import com.yanakudrinskaya.bookshelf.auth.domain.models.User
-import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileRepository
 import com.yanakudrinskaya.bookshelf.utils.ResponseStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import androidx.core.content.edit
+import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileRepository
 
 const val APP_PREFERENCES = "app_prefs"
 const val KEY_USER_PROFILE = "user_profile"

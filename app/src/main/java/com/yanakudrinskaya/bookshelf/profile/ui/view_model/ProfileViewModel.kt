@@ -18,8 +18,9 @@ import com.yanakudrinskaya.bookshelf.profile.domain.FileManagerInteractor
 import com.yanakudrinskaya.bookshelf.profile.ui.model.PermissionState
 import android.content.pm.PackageManager
 import android.util.Log
-import com.yanakudrinskaya.bookshelf.auth.domain.AuthInteractor
+import com.yanakudrinskaya.bookshelf.auth.domain.api.AuthInteractor
 import com.yanakudrinskaya.bookshelf.auth.domain.models.User
+import kotlinx.coroutines.flow.first
 
 class ProfileViewModel(
     private val avatarInteractor: AvatarInteractor,
@@ -53,30 +54,27 @@ class ProfileViewModel(
 
     fun loadUserProfile() {
         viewModelScope.launch {
-            authInteractor.getCurrentUser().collect { result ->
-                when (result) {
-                    is Result.Error -> {
-                        Log.e("ProfileViewModel", "Error loading user: ${result.message}")
-                        userLiveData.value = UserState(
-                            name = "",
-                            email = "",
-                            placeholder = avatarInteractor.getPlaceholder()
-                        )
-                    }
-
-                    is Result.Success -> {
-                        user = result.data
-                        userLiveData.value = UserState(
-                            name = user.name,
-                            email = user.email,
-                            placeholder = avatarInteractor.getPlaceholder()
-                        )
-                        loadAvatar()
-                    }
+            val result = authInteractor.getCurrentUser().first()
+            when (result) {
+                is Result.Error -> {
+                    Log.e("ProfileViewModel", "Error loading user: ${result.message}")
+                    userLiveData.value = UserState(
+                        name = "",
+                        email = "",
+                        placeholder = avatarInteractor.getPlaceholder()
+                    )
+                }
+                is Result.Success -> {
+                    user = result.data
+                    userLiveData.value = UserState(
+                        name = user.name,
+                        email = user.email,
+                        placeholder = avatarInteractor.getPlaceholder()
+                    )
+                    loadAvatar()
                 }
             }
         }
-
     }
 
     fun loadAvatar() {

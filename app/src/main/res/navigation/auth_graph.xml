@@ -8,28 +8,26 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.yanakudrinskaya.bookshelf.auth.ui.fragment.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment_to_navigation_graph"
-            app:destination="@id/navigation_graph"
-            app:popUpTo="@id/auth_graph"/>
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
-            app:destination="@id/registerFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:destination="@+id/registerFragment" />
+
+        <action
+            android:id="@+id/action_loginFragment_to_navigation_graph"
+            app:destination="@+id/navigation_graph" />
     </fragment>
+
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.yanakudrinskaya.bookshelf.auth.ui.fragment.RegisterFragment"
-        android:label="fragment_register"
-        tools:layout="@layout/fragment_register">
+        android:label="RegisterFragment"
+        tools:layout="@layout/fragment_register" >
+
         <action
             android:id="@+id/action_registerFragment_to_navigation_graph"
-            app:destination="@id/navigation_graph"
-            app:popUpTo="@id/auth_graph"/>
+            app:destination="@+id/navigation_graph" />
     </fragment>
 </navigation>

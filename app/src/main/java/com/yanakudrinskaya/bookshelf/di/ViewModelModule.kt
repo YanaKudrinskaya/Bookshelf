@@ -34,6 +34,10 @@ val viewModelModule = module {
     }
 
     viewModel {
+        RegisterViewModel(authInteractor = get())
+    }
+
+    viewModel {
         LibraryViewModel(bookshelfInteractor = get())
     }
 
@@ -45,15 +49,11 @@ val viewModelModule = module {
         ProfileViewModel(
             avatarInteractor = get(),
             fileManagerInteractor = get(),
-            authInteractor = get())
+            authInteractor = get()
+        )
     }
 
     viewModel {
         AddBookViewModel(bookshelfInteractor = get())
     }
-
-    viewModel {
-        RegisterViewModel(authInteractor = get())
-    }
-
 }

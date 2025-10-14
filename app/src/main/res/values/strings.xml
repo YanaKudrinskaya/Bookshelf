@@ -5,25 +5,24 @@
     <string name="on_boarding_text_1">Добро пожаловать! \n \n Здесь ты можешь хранить все свои книги.</string>
     <string name="on_boarding_text_2">Просто поставь ее на свою книжную полку.</string>
     <string name="on_boarding_text_3">Не помнишь, есть ли у тебя нужное произведение - книжная полка всегда под рукой в твоем телефоне.</string>
-    <string name="welcome_back">С возвращением!</string>
-    <string name="welcome_login">Войдите в свой аккаунт</string>
+
+    <string name="welcome_login">Войдите или зарегистрируйтесь</string>
     <string name="email">Email</string>
     <string name="password">Пароль</string>
     <string name="password_hint">Подтвердите пароль</string>
-    <string name="login_btn">Войти</string>
-    <string name="register">Регистрация</string>
     <string name="register_btn">Зарегистрироваться</string>
+    <string name="login_btn">Войти</string>
     <string name="name_hint">Имя</string>
+    <string name="create_account">Создать аккаунт</string>
+    <string name="already_have_account_login">Уже есть аккаунт? Войти</string>
+    <string name="enter_email">Введите email</string>
+    <string name="invalid_email">Неверный формат email</string>
+    <string name="enter_password">Введите пароль</string>
+    <string name="enter_name">Введите имя</string>
+    <string name="password_valide">Пароль должен содержать минимум 6 символов</string>
+    <string name="password_not_match">Пароли не совпадают</string>
+
     <string name="new_name_hint">Введите новое имя</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">Welcome !</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">Login failed</string>
     <string name="search_hint">Поиск...</string>
     <string name="library">Мои книги</string>
     <string name="wishlist">Мои желания</string>
@@ -55,5 +54,5 @@
     <string name="cancel">Отмена</string>
     <string name="select">Выберите источник</string>
 
-    <string name="default_web_client_id">535793210417-7anfdtlr3edgrq6ekul5jvllcbkftu2t.apps.googleusercontent.com</string>
+
 </resources>

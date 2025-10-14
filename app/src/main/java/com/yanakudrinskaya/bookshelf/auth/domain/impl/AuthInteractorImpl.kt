@@ -1,8 +1,8 @@
 package com.yanakudrinskaya.bookshelf.auth.domain.impl
 
-import com.yanakudrinskaya.bookshelf.auth.domain.AuthInteractor
 import com.yanakudrinskaya.bookshelf.auth.domain.AuthRepository
 import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileRepository
+import com.yanakudrinskaya.bookshelf.auth.domain.api.AuthInteractor
 import com.yanakudrinskaya.bookshelf.auth.domain.models.User
 import com.yanakudrinskaya.bookshelf.utils.Result
 import kotlinx.coroutines.flow.Flow
@@ -21,10 +21,6 @@ class AuthInteractorImpl(
 
     override suspend fun signInWithGoogle(idToken: String): Result<User> {
         return authRepository.signInWithGoogle(idToken)
-    }
-
-    override suspend fun linkWithGoogle(idToken: String): Result<User> {
-        return authRepository.linkWithGoogle(idToken)
     }
 
     override fun getCurrentUser(): Flow<Result<User>> = authRepository.getCurrentUser()
