@@ -1,8 +1,8 @@
 package com.yanakudrinskaya.bookshelf.auth.ui.fragment
 
 import android.os.Bundle
-import android.text.TextWatcher
 import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,31 +12,26 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yanakudrinskaya.bookshelf.R
-import com.yanakudrinskaya.bookshelf.auth.data.network.google_auth.models.GoogleSignInResult
-import com.yanakudrinskaya.bookshelf.databinding.FragmentLoginBinding
-import com.yanakudrinskaya.bookshelf.auth.ui.models.LoginUiState
-import com.yanakudrinskaya.bookshelf.auth.ui.view_model.LoginViewModel
-import com.yanakudrinskaya.bookshelf.auth.data.utils.GoogleCredentialManager
+import com.yanakudrinskaya.bookshelf.auth.ui.models.RegisterUiState
+import com.yanakudrinskaya.bookshelf.auth.ui.view_model.RegisterViewModel
+import com.yanakudrinskaya.bookshelf.databinding.FragmentRegisterBinding
 import com.yanakudrinskaya.bookshelf.root.ui.NavigationVisibilityController
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoginFragment : Fragment() {
+class RegisterFragment : Fragment() {
 
-    private var _binding: FragmentLoginBinding? = null
+    private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: LoginViewModel by viewModel()
-
-    private val googleCredentialManager: GoogleCredentialManager by inject()
+    private val viewModel: RegisterViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -49,21 +44,21 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        binding.btnLogin.setOnClickListener {
-            val email = binding.etEmail.text.toString().trim()
-            val password = binding.etPassword.text.toString()
+        binding.apply {
+            btnRegister.setOnClickListener {
+                val name = etName.text.toString().trim()
+                val email = etEmail.text.toString().trim()
+                val password = etPassword.text.toString()
+                val confirmPassword = etConfirmPassword.text.toString()
 
-            if (validateForm(email, password)) {
-                viewModel.login(email, password)
+                if (validateForm(name, email, password, confirmPassword)) {
+                    viewModel.register(name, email, password)
+                }
             }
-        }
 
-        binding.tvRegister.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
-        }
-
-        binding.googleSignInButton.setOnClickListener {
-            signInWithGoogle()
+            tvLogin.setOnClickListener {
+                findNavController().navigateUp()
+            }
         }
     }
 
@@ -71,28 +66,40 @@ class LoginFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.getUiState().collect { state ->
                 when (state) {
-                    is LoginUiState.Loading -> showLoading(true)
-                    is LoginUiState.Success -> {
+                    is RegisterUiState.Loading -> showLoading(true)
+                    is RegisterUiState.Success -> {
                         showLoading(false)
-                        findNavController().navigate(R.id.action_loginFragment_to_navigation_graph)
+                        findNavController().navigate(R.id.action_registerFragment_to_navigation_graph)
                         viewModel.clearError()
                     }
 
-                    is LoginUiState.Error -> {
+                    is RegisterUiState.Error -> {
                         showLoading(false)
                         showError(state.message)
                         viewModel.clearError()
                     }
 
-                    is LoginUiState.Idle -> showLoading(false)
+                    is RegisterUiState.Idle -> showLoading(false)
                 }
             }
         }
     }
 
-    private fun validateForm(email: String, password: String): Boolean {
+    private fun validateForm(
+        name: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ): Boolean {
         var isValid = true
         binding.apply {
+            if (name.isEmpty()) {
+                tilName.error = requireContext().getString(R.string.enter_name)
+                isValid = false
+            } else {
+                tilName.error = null
+            }
+
             if (email.isEmpty()) {
                 tilEmail.error = requireContext().getString(R.string.enter_email)
                 isValid = false
@@ -106,8 +113,20 @@ class LoginFragment : Fragment() {
             if (password.isEmpty()) {
                 tilPassword.error = requireContext().getString(R.string.enter_password)
                 isValid = false
+            } else if (password.length < 6) {
+                tilPassword.error = requireContext().getString(R.string.password_valide)
             } else {
                 tilPassword.error = null
+            }
+
+            if (confirmPassword.isEmpty()) {
+                tilConfirmPassword.error = requireContext().getString(R.string.password_hint)
+                isValid = false
+            } else if (password != confirmPassword) {
+                tilConfirmPassword.error = requireContext().getString(R.string.password_not_match)
+                isValid = false
+            } else {
+                tilConfirmPassword.error = null
             }
         }
         return isValid
@@ -122,13 +141,19 @@ class LoginFragment : Fragment() {
             }
         }
 
+        binding.etName.addTextChangedListener(textWatcher)
         binding.etEmail.addTextChangedListener(textWatcher)
         binding.etPassword.addTextChangedListener(textWatcher)
+        binding.etConfirmPassword.addTextChangedListener(textWatcher)
     }
 
     private fun clearErrors() {
-        binding.tilEmail.error = null
-        binding.tilPassword.error = null
+        binding.apply {
+            tilName.error = null
+            tilEmail.error = null
+            tilPassword.error = null
+            tilConfirmPassword.error = null
+        }
     }
 
     private fun showError(message: String) {
@@ -137,22 +162,6 @@ class LoginFragment : Fragment() {
             .setMessage(message)
             .setPositiveButton("OK", null)
             .show()
-    }
-
-    private fun signInWithGoogle() {
-        lifecycleScope.launch {
-            showLoading(true)
-            when (val result = googleCredentialManager.signInWithGoogle(requireActivity())) {
-                is GoogleSignInResult.Success -> {
-                    viewModel.signInWithGoogle(result.idToken)
-                }
-
-                is GoogleSignInResult.Error -> {
-                    showError(result.message)
-                    showLoading(false)
-                }
-            }
-        }
     }
 
     private fun showLoading(show: Boolean) {

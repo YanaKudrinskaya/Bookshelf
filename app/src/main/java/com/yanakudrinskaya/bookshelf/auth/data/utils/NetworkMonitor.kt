@@ -1,4 +1,4 @@
-package com.yanakudrinskaya.bookshelf.auth.data
+package com.yanakudrinskaya.bookshelf.auth.data.utils
 
 import android.Manifest
 import android.content.Context

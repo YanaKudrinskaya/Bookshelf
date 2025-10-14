@@ -1,6 +1,6 @@
 package com.yanakudrinskaya.bookshelf.di
 
-import com.yanakudrinskaya.bookshelf.auth.domain.AuthInteractor
+import com.yanakudrinskaya.bookshelf.auth.domain.api.AuthInteractor
 import com.yanakudrinskaya.bookshelf.on_boarding.domain.OnBoardingContentUseCase
 import com.yanakudrinskaya.bookshelf.auth.domain.impl.AuthInteractorImpl
 import com.yanakudrinskaya.bookshelf.library.domain.BookshelfInteractor
@@ -15,35 +15,31 @@ import org.koin.dsl.module
 
 val interactorModule = module {
 
-    factory <AuthInteractor> {
-        AuthInteractorImpl(
-            authRepository = get(),
-            userProfileRepository = get())
+    factory<AuthInteractor> {
+        AuthInteractorImpl(get(), get())
     }
 
     factory<AvatarInteractor> {
-        AvatarInteractorImpl(
-            avatarRepository = get(),
-            fileManager = get())
+        AvatarInteractorImpl(get(), get())
     }
 
     factory<FileManagerInteractor> {
-        FileManagerInteractorImpl(fileManager = get())
+        FileManagerInteractorImpl(get())
     }
 
     factory<OnBoardingContentUseCase> {
-        OnBoardingContentUseCase(repository = get())
+        OnBoardingContentUseCase(get())
     }
 
     single<ResourcesProviderUseCase> {
-        ResourcesProviderUseCase(repository = get())
+        ResourcesProviderUseCase(get())
     }
 
     factory<BookshelfInteractor> {
-        BookshelfInteractorImpl(bookshelfRepository = get())
+        BookshelfInteractorImpl(get())
     }
 
     single {
-        SplashUseCase(repository = get())
+        SplashUseCase(get())
     }
 }

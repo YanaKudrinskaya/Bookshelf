@@ -1,4 +1,4 @@
-package com.yanakudrinskaya.bookshelf.auth.utils
+package com.yanakudrinskaya.bookshelf.auth.data.utils
 
 import android.app.Activity
 import android.content.Context
@@ -11,6 +11,7 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.yanakudrinskaya.bookshelf.R
+import com.yanakudrinskaya.bookshelf.auth.data.network.google_auth.models.GoogleSignInResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -18,9 +19,8 @@ class GoogleCredentialManager(private val context: Context) {
 
     private val credentialManager = CredentialManager.create(context)
 
-    suspend fun signInWithGoogle(activity: Activity): String? = withContext(Dispatchers.IO) {
+    suspend fun signInWithGoogle(activity: Activity): GoogleSignInResult = withContext(Dispatchers.IO) {
         try {
-
             val clientId = context.getString(R.string.default_web_client_id)
 
             val googleIdOption = GetGoogleIdOption.Builder()
@@ -39,11 +39,15 @@ class GoogleCredentialManager(private val context: Context) {
             )
 
             val idToken = extractIdTokenFromResponse(response)
-            idToken
+            if (idToken != null) {
+                GoogleSignInResult.Success(idToken)
+            } else {
+                GoogleSignInResult.Error("Failed to extract ID token")
+            }
         } catch (e: GetCredentialException) {
-            null
+            GoogleSignInResult.Error(e.message ?: "Google sign in failed")
         } catch (e: Exception) {
-            null
+            GoogleSignInResult.Error(e.message ?: "Unknown error during Google sign in")
         }
     }
 

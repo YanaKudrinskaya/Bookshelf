@@ -7,13 +7,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.yanakudrinskaya.bookshelf.auth.data.APP_PREFERENCES
 import com.yanakudrinskaya.bookshelf.auth.data.network.AuthProvider
-import com.yanakudrinskaya.bookshelf.auth.data.NetworkMonitor
+import com.yanakudrinskaya.bookshelf.auth.data.utils.NetworkMonitor
 import com.yanakudrinskaya.bookshelf.auth.data.mappers.UserFirestoreMapper
 import com.yanakudrinskaya.bookshelf.auth.data.mappers.UserSharedPrefsMapper
 import com.yanakudrinskaya.bookshelf.auth.data.network.FirebaseAuthProvider
-import com.yanakudrinskaya.bookshelf.auth.data.network.FirebaseGoogleAuthProvider
+import com.yanakudrinskaya.bookshelf.auth.data.network.FirestoreUserManager
 import com.yanakudrinskaya.bookshelf.auth.data.network.GoogleProvider
-import com.yanakudrinskaya.bookshelf.auth.utils.GoogleCredentialManager
+import com.yanakudrinskaya.bookshelf.auth.data.network.google_auth.FirebaseGoogleProvider
 import com.yanakudrinskaya.bookshelf.library.data.firebase.converters.AuthorConverter
 import com.yanakudrinskaya.bookshelf.library.data.firebase.converters.BookConverter
 import com.yanakudrinskaya.bookshelf.library.data.firebase.converters.WorkConverter
@@ -37,16 +37,8 @@ val dataModule = module {
         FirebaseFirestore.getInstance()
     }
 
-    single<AuthProvider> {
-        FirebaseAuthProvider(
-            firebaseAuth = get(),
-            firestore = get(),
-            userFirestoreMapper = get())
-    }
-
     single<GoogleProvider> {
-        FirebaseGoogleAuthProvider(get(), get(), get()
-        )
+        FirebaseGoogleProvider(get())
     }
 
     single { UserSharedPrefsMapper(gson = get()) }
@@ -80,6 +72,13 @@ val dataModule = module {
         )
     }
 
-    factory { Gson() }
+    single {
+        FirestoreUserManager(get(), get())
+    }
 
+    single<AuthProvider> {
+        FirebaseAuthProvider(get(), get())
+    }
+
+    factory { Gson() }
 }

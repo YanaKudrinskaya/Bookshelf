@@ -6,7 +6,7 @@ import com.yanakudrinskaya.bookshelf.auth.data.AuthRepositoryImpl
 import com.yanakudrinskaya.bookshelf.auth.data.UserProfileRepositoryImpl
 import com.yanakudrinskaya.bookshelf.auth.domain.AuthRepository
 import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileRepository
-import com.yanakudrinskaya.bookshelf.auth.utils.GoogleCredentialManager
+import com.yanakudrinskaya.bookshelf.auth.data.utils.GoogleCredentialManager
 import com.yanakudrinskaya.bookshelf.library.data.ResourcesProviderRepositoryImpl
 import com.yanakudrinskaya.bookshelf.library.data.FirebaseBookshelfRepositoryImpl
 import com.yanakudrinskaya.bookshelf.library.domain.BookshelfRepository
@@ -23,19 +23,11 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     single<AuthRepository> {
-        AuthRepositoryImpl(
-            authProvider = get(),
-            localDataSource = get(),
-            networkMonitor = get(),
-            googleAuthProvider = get()
-        )
+        AuthRepositoryImpl(get(), get(), get(), get(), get())
     }
 
     single<UserProfileRepository> {
-        UserProfileRepositoryImpl(
-            sharedPreferences = get(),
-            userSharedPrefsMapper = get()
-        )
+        UserProfileRepositoryImpl(get(), get())
     }
 
     single<AvatarManagerRepository> {
