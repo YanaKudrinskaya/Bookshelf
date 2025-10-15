@@ -37,6 +37,7 @@ android-room-compiler = { group = "androidx.room", name = "room-compiler", versi
 android-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
 # Lifecycle - ViewModel для MVVM
+androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 

@@ -1,13 +1,11 @@
 package com.yanakudrinskaya.bookshelf.auth.data.network
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.yanakudrinskaya.bookshelf.auth.domain.models.User
 import com.yanakudrinskaya.bookshelf.utils.Result
 import com.yanakudrinskaya.bookshelf.utils.ResponseStatus
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import java.net.SocketTimeoutException
 import kotlin.coroutines.cancellation.CancellationException
@@ -74,11 +72,17 @@ class FirebaseAuthProvider(
 
     override suspend fun updateUserName(newName: String): Result<User> {
         return try {
-            val currentUser = firebaseAuth.currentUser ?: return Result.Error(
-                ResponseStatus.UNAUTHORIZED,
-                "User not authenticated"
-            )
-            firestoreUserManager.updateUserName(currentUser.uid, newName)
+            val currentUser = firebaseAuth.currentUser
+
+            if (currentUser == null) {
+                return Result.Error(
+                    ResponseStatus.UNAUTHORIZED,
+                    "User not authenticated"
+                )
+            }
+
+            val result = firestoreUserManager.updateUserName(currentUser.uid, newName)
+            result
         } catch (e: Exception) {
             Result.Error(ResponseStatus.SERVER_ERROR, e.message)
         }

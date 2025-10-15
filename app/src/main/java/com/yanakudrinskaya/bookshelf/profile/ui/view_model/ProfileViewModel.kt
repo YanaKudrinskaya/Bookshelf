@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yanakudrinskaya.bookshelf.profile.domain.AvatarInteractor
+import com.yanakudrinskaya.bookshelf.profile.domain.api.AvatarInteractor
 import com.yanakudrinskaya.bookshelf.profile.ui.model.UserState
 import kotlinx.coroutines.launch
 import android.Manifest
@@ -14,18 +14,21 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import com.yanakudrinskaya.bookshelf.profile.ui.model.ImagePickEvent
 import com.yanakudrinskaya.bookshelf.utils.Result
-import com.yanakudrinskaya.bookshelf.profile.domain.FileManagerInteractor
 import com.yanakudrinskaya.bookshelf.profile.ui.model.PermissionState
 import android.content.pm.PackageManager
 import android.util.Log
-import com.yanakudrinskaya.bookshelf.auth.domain.api.AuthInteractor
 import com.yanakudrinskaya.bookshelf.auth.domain.models.User
-import kotlinx.coroutines.flow.first
+import com.yanakudrinskaya.bookshelf.profile.domain.api.FileManager
+import com.yanakudrinskaya.bookshelf.profile.domain.use_cases.GetProfileUseCase
+import com.yanakudrinskaya.bookshelf.profile.domain.use_cases.LogoutUseCase
+import com.yanakudrinskaya.bookshelf.profile.domain.use_cases.UpdateUserNameUseCase
 
 class ProfileViewModel(
     private val avatarInteractor: AvatarInteractor,
-    private val fileManagerInteractor: FileManagerInteractor,
-    private var authInteractor: AuthInteractor,
+    private val fileManager: FileManager,
+    private val logoutUseCase: LogoutUseCase,
+    private val profileUseCase: GetProfileUseCase,
+    private val updateUserNameUseCase: UpdateUserNameUseCase
 ) : ViewModel() {
 
     private val userLiveData = MutableLiveData<UserState>()
@@ -49,29 +52,33 @@ class ProfileViewModel(
     }
 
     fun logout() {
-        authInteractor.logout()
+        logoutUseCase.logout()
     }
 
     fun loadUserProfile() {
         viewModelScope.launch {
-            val result = authInteractor.getCurrentUser().first()
-            when (result) {
-                is Result.Error -> {
-                    Log.e("ProfileViewModel", "Error loading user: ${result.message}")
-                    userLiveData.value = UserState(
-                        name = "",
-                        email = "",
-                        placeholder = avatarInteractor.getPlaceholder()
-                    )
-                }
-                is Result.Success -> {
-                    user = result.data
-                    userLiveData.value = UserState(
-                        name = user.name,
-                        email = user.email,
-                        placeholder = avatarInteractor.getPlaceholder()
-                    )
-                    loadAvatar()
+            profileUseCase.getLocalUserProfileStream().collect { result ->
+                Log.d("ProfileViewModel", "Flow emitted: $result")
+                when (result) {
+                    is Result.Error -> {
+                        Log.e("ProfileViewModel", "Error loading user: ${result.message}")
+                        userLiveData.value = UserState(
+                            name = "",
+                            email = "",
+                            placeholder = avatarInteractor.getPlaceholder()
+                        )
+                    }
+
+                    is Result.Success -> {
+                        Log.d("ProfileViewModel", "User data updated: ${result.data.name}")
+                        user = result.data
+                        userLiveData.value = UserState(
+                            name = user.name,
+                            email = user.email,
+                            placeholder = avatarInteractor.getPlaceholder()
+                        )
+                        loadAvatar()
+                    }
                 }
             }
         }
@@ -146,7 +153,7 @@ class ProfileViewModel(
     }
 
     fun createImageFile(): Result<String> {
-        return fileManagerInteractor.createTempImageFile()
+        return fileManager.createTempImageFile()
     }
 
     fun onGallerySelected() {
@@ -159,7 +166,7 @@ class ProfileViewModel(
         when (val result = createImageFile()) {
             is Result.Success -> {
                 currentPhotoPath = result.data
-                when (val uriResult = fileManagerInteractor.getUriForFile(result.data)) {
+                when (val uriResult = fileManager.getUriForFile(result.data)) {
                     is Result.Success -> {
                         imagePickEvent.value = ImagePickEvent.FromCamera(uriResult.data)
                     }
@@ -183,28 +190,8 @@ class ProfileViewModel(
     }
 
     fun changeName(name: String) {
-        if (name.isNotEmpty()) {
-            viewModelScope.launch {
-                authInteractor.updateUserName(name).let { result ->
-                    when (result) {
-                        is Result.Success -> {
-                            Log.d("Myregister", "Изменение имени пользователя прошло успешно")
-                            user = result.data
-                            userLiveData.postValue(
-                                getCurrentPlayStatus().copy(
-                                    name = user.name,
-                                    avatarIsChange = false
-                                )
-                            )
-                        }
-
-                        is Result.Error -> {
-                            Log.d("Myregister", "Ошибка")
-                            imagePickEvent.postValue(ImagePickEvent.Error(""))
-                        }
-                    }
-                }
-            }
+        viewModelScope.launch {
+            updateUserNameUseCase.invoke(user.userId, name)
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.yanakudrinskaya.bookshelf.profile.domain
+package com.yanakudrinskaya.bookshelf.profile.domain.api
 
 import com.yanakudrinskaya.bookshelf.profile.data.dto.AvatarDto
 import java.io.File

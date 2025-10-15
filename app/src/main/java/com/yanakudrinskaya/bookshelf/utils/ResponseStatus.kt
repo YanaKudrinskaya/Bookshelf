@@ -8,5 +8,7 @@ enum class ResponseStatus {
     NO_INTERNET, // Нет интернета
     AUTH_ERROR,
     CANCELLED,
-    UNAUTHORIZED
+    UNAUTHORIZED,
+    PARTIAL_SUCCESS,
+    SYNC_ERROR
 }

@@ -6,25 +6,22 @@ import com.yanakudrinskaya.bookshelf.auth.domain.impl.AuthInteractorImpl
 import com.yanakudrinskaya.bookshelf.library.domain.BookshelfInteractor
 import com.yanakudrinskaya.bookshelf.library.domain.impl.BookshelfInteractorImpl
 import com.yanakudrinskaya.bookshelf.library.domain.use_cases.ResourcesProviderUseCase
-import com.yanakudrinskaya.bookshelf.profile.domain.AvatarInteractor
-import com.yanakudrinskaya.bookshelf.profile.domain.FileManagerInteractor
+import com.yanakudrinskaya.bookshelf.profile.domain.api.AvatarInteractor
 import com.yanakudrinskaya.bookshelf.profile.domain.impl.AvatarInteractorImpl
-import com.yanakudrinskaya.bookshelf.profile.domain.impl.FileManagerInteractorImpl
+import com.yanakudrinskaya.bookshelf.profile.domain.use_cases.GetProfileUseCase
+import com.yanakudrinskaya.bookshelf.profile.domain.use_cases.LogoutUseCase
+import com.yanakudrinskaya.bookshelf.profile.domain.use_cases.UpdateUserNameUseCase
 import com.yanakudrinskaya.bookshelf.splash.domain.SplashUseCase
 import org.koin.dsl.module
 
 val interactorModule = module {
 
     factory<AuthInteractor> {
-        AuthInteractorImpl(get(), get())
+        AuthInteractorImpl(get())
     }
 
     factory<AvatarInteractor> {
         AvatarInteractorImpl(get(), get())
-    }
-
-    factory<FileManagerInteractor> {
-        FileManagerInteractorImpl(get())
     }
 
     factory<OnBoardingContentUseCase> {
@@ -41,5 +38,17 @@ val interactorModule = module {
 
     single {
         SplashUseCase(get())
+    }
+
+    single {
+        LogoutUseCase(get())
+    }
+
+    single {
+        UpdateUserNameUseCase(get())
+    }
+
+    single {
+        GetProfileUseCase(get())
     }
 }

@@ -1,4 +1,4 @@
-package com.yanakudrinskaya.bookshelf.auth.data
+package com.yanakudrinskaya.bookshelf.profile.data
 
 import android.content.SharedPreferences
 import com.yanakudrinskaya.bookshelf.auth.data.mappers.UserSharedPrefsMapper
@@ -9,15 +9,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import androidx.core.content.edit
-import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileRepository
+import com.yanakudrinskaya.bookshelf.profile.domain.api.LocalUserRepository
 
-const val APP_PREFERENCES = "app_prefs"
-const val KEY_USER_PROFILE = "user_profile"
-
-class UserProfileRepositoryImpl(
+class LocalUserRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
     private val userSharedPrefsMapper: UserSharedPrefsMapper
-) : UserProfileRepository {
+) : LocalUserRepository {
 
     private val userFlow = MutableStateFlow<Result<User>>(getLocalUserProfile())
     fun getUserFlow(): StateFlow<Result<User>> = userFlow
@@ -41,6 +38,7 @@ class UserProfileRepositoryImpl(
             Result.Error(ResponseStatus.NOT_FOUND, "User not found in local storage")
         }
     }
+
     override fun getLocalUserProfileStream(): Flow<Result<User>> = getUserFlow()
 
 
@@ -49,5 +47,9 @@ class UserProfileRepositoryImpl(
             remove(KEY_USER_PROFILE)
         }
         userFlow.value = Result.Error(ResponseStatus.NOT_FOUND, "User profile deleted")
+    }
+
+    companion object {
+        private const val KEY_USER_PROFILE = "user_profile"
     }
 }

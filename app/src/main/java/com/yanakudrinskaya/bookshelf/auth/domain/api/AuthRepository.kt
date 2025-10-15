@@ -1,4 +1,4 @@
-package com.yanakudrinskaya.bookshelf.auth.domain
+package com.yanakudrinskaya.bookshelf.auth.domain.api
 
 import com.yanakudrinskaya.bookshelf.auth.domain.models.User
 import com.yanakudrinskaya.bookshelf.utils.Result
@@ -9,6 +9,5 @@ interface AuthRepository {
     suspend fun login(email: String, password: String): Result<User>
     suspend fun signInWithGoogle(idToken: String): Result<User>
     fun getCurrentUser(): Flow<Result<User>>
-    suspend fun updateUserName(newName: String) : Result<User>
     fun logout()
 }

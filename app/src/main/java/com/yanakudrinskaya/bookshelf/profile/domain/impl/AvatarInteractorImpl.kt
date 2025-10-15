@@ -2,9 +2,9 @@ package com.yanakudrinskaya.bookshelf.profile.domain.impl
 
 import android.net.Uri
 import com.yanakudrinskaya.bookshelf.profile.data.dto.AvatarDto
-import com.yanakudrinskaya.bookshelf.profile.domain.AvatarInteractor
-import com.yanakudrinskaya.bookshelf.profile.domain.AvatarManagerRepository
-import com.yanakudrinskaya.bookshelf.profile.domain.FileManager
+import com.yanakudrinskaya.bookshelf.profile.domain.api.AvatarInteractor
+import com.yanakudrinskaya.bookshelf.profile.domain.api.AvatarManagerRepository
+import com.yanakudrinskaya.bookshelf.profile.domain.api.FileManager
 import java.io.File
 
 class AvatarInteractorImpl(
@@ -30,6 +30,4 @@ class AvatarInteractorImpl(
     }
 
     override fun getPlaceholder(): Int = avatarRepository.getPlaceholderResId()
-
-
 }

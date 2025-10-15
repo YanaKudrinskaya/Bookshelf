@@ -105,13 +105,7 @@ class FirestoreUserManager(
                 .update(FIELD_NAME, newName)
                 .await()
 
-            // Получаем обновленного пользователя
-            getUserDocument(userId).let { result ->
-                when (result) {
-                    is Result.Success -> Result.Success(result.data.copy(name = newName))
-                    is Result.Error -> result
-                }
-            }
+            getUserDocument(userId)
         } catch (e: SocketTimeoutException) {
             Result.Error(ResponseStatus.NO_INTERNET, e.message)
         } catch (e: FirebaseFirestoreException) {

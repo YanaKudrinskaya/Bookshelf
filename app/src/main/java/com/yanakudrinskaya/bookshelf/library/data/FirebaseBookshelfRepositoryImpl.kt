@@ -1,7 +1,7 @@
 package com.yanakudrinskaya.bookshelf.library.data
 
 import android.util.Log
-import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileRepository
+import com.yanakudrinskaya.bookshelf.profile.domain.api.LocalUserRepository
 import com.yanakudrinskaya.bookshelf.auth.domain.models.User
 import com.yanakudrinskaya.bookshelf.library.data.firebase.converters.AuthorConverter
 import com.yanakudrinskaya.bookshelf.library.data.firebase.converters.BookConverter
@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
 class FirebaseBookshelfRepositoryImpl(
-    private val userProfile: UserProfileRepository,
+    private val userProfile: LocalUserRepository,
     private val bookDao: FirebaseBookDao,
     private val authorDao: FirebaseAuthorDao,
     private val workDao: FirebaseWorkDao,

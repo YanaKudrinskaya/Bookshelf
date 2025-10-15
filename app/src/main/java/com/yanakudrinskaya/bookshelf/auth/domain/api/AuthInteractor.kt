@@ -9,7 +9,4 @@ interface AuthInteractor {
     suspend fun login(email: String, password: String): Result<User>
     suspend fun signInWithGoogle(idToken: String): Result<User>
     fun getCurrentUser(): Flow<Result<User>>
-    fun getLocalUserProfileStream(): Flow<Result<User>>
-    suspend fun updateUserName(newName: String): Result<User>
-    fun logout()
 }

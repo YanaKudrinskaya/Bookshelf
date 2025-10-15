@@ -4,9 +4,6 @@ import android.content.SharedPreferences
 import com.yanakudrinskaya.bookshelf.splash.domain.SplashRepository
 import androidx.core.content.edit
 
-const val APP_PREFERENCES = "app_prefs"
-const val IS_FIRST_LAUNCH = "is_first_launch"
-
 class SplashRepositoryImpl (
     private val sharedPreferences: SharedPreferences,
 ) : SplashRepository {
@@ -18,4 +15,7 @@ class SplashRepositoryImpl (
         } else false
     }
 
+    companion object {
+        private const val IS_FIRST_LAUNCH = "is_first_launch"
+    }
 }

@@ -4,19 +4,18 @@ import com.yanakudrinskaya.bookshelf.auth.data.network.AuthProvider
 import com.yanakudrinskaya.bookshelf.auth.data.network.FirestoreUserManager
 import com.yanakudrinskaya.bookshelf.auth.data.network.GoogleProvider
 import com.yanakudrinskaya.bookshelf.auth.data.network.google_auth.models.GoogleAuthResult
-import com.yanakudrinskaya.bookshelf.auth.data.utils.NetworkMonitor
+import com.yanakudrinskaya.bookshelf.utils.NetworkMonitor
 import com.yanakudrinskaya.bookshelf.auth.domain.models.User
 import com.yanakudrinskaya.bookshelf.utils.Result
-import com.yanakudrinskaya.bookshelf.auth.domain.AuthRepository
-import com.yanakudrinskaya.bookshelf.auth.domain.UserProfileRepository
-import com.yanakudrinskaya.bookshelf.utils.ResponseStatus
+import com.yanakudrinskaya.bookshelf.auth.domain.api.AuthRepository
+import com.yanakudrinskaya.bookshelf.profile.domain.api.LocalUserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class AuthRepositoryImpl(
     private val authProvider: AuthProvider,
     private val googleAuthProvider: GoogleProvider,
-    private val localDataSource: UserProfileRepository,
+    private val localDataSource: LocalUserRepository,
     private val networkMonitor: NetworkMonitor,
     private val firestoreUserManager: FirestoreUserManager
 ) : AuthRepository {
@@ -58,14 +57,6 @@ class AuthRepositoryImpl(
             }
         }
         emit(localDataSource.getLocalUserProfile())
-    }
-
-    override suspend fun updateUserName(newName: String): Result<User> {
-        return authProvider.updateUserName(newName).also { result ->
-            if (result is Result.Success) {
-                localDataSource.saveLocalUserProfile(result.data)
-            }
-        }
     }
 
     override fun logout() {

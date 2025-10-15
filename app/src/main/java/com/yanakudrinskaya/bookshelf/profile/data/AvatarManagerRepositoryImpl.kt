@@ -3,10 +3,10 @@ package com.yanakudrinskaya.bookshelf.profile.data
 import android.content.Context
 import com.yanakudrinskaya.bookshelf.R
 import com.yanakudrinskaya.bookshelf.profile.data.dto.AvatarDto
-import com.yanakudrinskaya.bookshelf.profile.domain.AvatarManagerRepository
+import com.yanakudrinskaya.bookshelf.profile.domain.api.AvatarManagerRepository
 import java.io.File
 
-class AvatarManagerRepositoryImpl (
+class AvatarManagerRepositoryImpl(
     private val context: Context
 ) : AvatarManagerRepository {
 
@@ -38,5 +38,4 @@ class AvatarManagerRepositoryImpl (
     }
 
     override fun getPlaceholderResId(): Int = R.drawable.placeholder
-
 }

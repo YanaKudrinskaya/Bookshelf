@@ -5,9 +5,8 @@ import android.net.ConnectivityManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
-import com.yanakudrinskaya.bookshelf.auth.data.APP_PREFERENCES
 import com.yanakudrinskaya.bookshelf.auth.data.network.AuthProvider
-import com.yanakudrinskaya.bookshelf.auth.data.utils.NetworkMonitor
+import com.yanakudrinskaya.bookshelf.utils.NetworkMonitor
 import com.yanakudrinskaya.bookshelf.auth.data.mappers.UserFirestoreMapper
 import com.yanakudrinskaya.bookshelf.auth.data.mappers.UserSharedPrefsMapper
 import com.yanakudrinskaya.bookshelf.auth.data.network.FirebaseAuthProvider
@@ -24,8 +23,12 @@ import com.yanakudrinskaya.bookshelf.library.data.firebase.dao.FirebaseBookWorkD
 import com.yanakudrinskaya.bookshelf.library.data.firebase.dao.FirebaseBookshelfDao
 import com.yanakudrinskaya.bookshelf.library.data.firebase.dao.FirebaseWorkAuthorDao
 import com.yanakudrinskaya.bookshelf.library.data.firebase.dao.FirebaseWorkDao
+import com.yanakudrinskaya.bookshelf.profile.data.FileManagerImpl
+import com.yanakudrinskaya.bookshelf.profile.domain.api.FileManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
+
+const val APP_PREFERENCES = "app_prefs"
 
 val dataModule = module {
 
@@ -81,4 +84,8 @@ val dataModule = module {
     }
 
     factory { Gson() }
+
+    single<FileManager> {
+        FileManagerImpl(androidContext())
+    }
 }

@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import androidx.core.content.FileProvider
-import com.yanakudrinskaya.bookshelf.profile.domain.FileManager
+import com.yanakudrinskaya.bookshelf.profile.domain.api.FileManager
 import com.yanakudrinskaya.bookshelf.utils.ResponseStatus
 import java.io.File
 import java.io.IOException
@@ -63,5 +63,4 @@ class FileManagerImpl(
             Result.Error(ResponseStatus.UNKNOWN_ERROR)
         }
     }
-
 }

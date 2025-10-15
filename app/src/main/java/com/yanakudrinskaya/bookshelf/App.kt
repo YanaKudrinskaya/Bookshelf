@@ -6,9 +6,7 @@ import com.yanakudrinskaya.bookshelf.di.interactorModule
 import com.yanakudrinskaya.bookshelf.di.repositoryModule
 import com.yanakudrinskaya.bookshelf.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-
 
 class App : Application() {
 
@@ -16,7 +14,6 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            androidLogger(org.koin.core.logger.Level.DEBUG)
             modules(dataModule, repositoryModule, interactorModule, viewModelModule)
         }
     }

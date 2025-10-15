@@ -73,7 +73,6 @@ class LoginFragment : Fragment() {
                 when (state) {
                     is LoginUiState.Loading -> showLoading(true)
                     is LoginUiState.Success -> {
-                        showLoading(false)
                         findNavController().navigate(R.id.action_loginFragment_to_navigation_graph)
                         viewModel.clearError()
                     }
