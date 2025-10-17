@@ -1,5 +1,6 @@
 [versions]
 agp = "8.13.0"
+converterGson = "3.0.0"
 credentialsPlayServicesAuth = "1.5.0"
 googleid = "1.1.1"
 kotlin = "2.2.20"
@@ -8,29 +9,51 @@ junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 appcompat = "1.7.1"
-material = "1.13.0"
-activity = "1.11.0"
-constraintlayout = "2.2.1"
 annotation = "1.9.1"
 lifecycle = "2.9.4"
-firebaseFirestore = "26.0.1"
-glide = "5.0.5"
-gson = "2.13.1"
-firebase-bom = "34.3.0"
+firebaseFirestore = "26.0.2"
+gson = "2.13.2"
+firebase-bom = "34.4.0"
 koin = "4.1.1"
 firebaseAuthKtx = "23.2.1"
 firebaseAnalytics = "23.0.0"
-fragment = "1.8.9"
-viewpager2 = "1.1.0"
-navigation = "2.9.5"
-room = "2.8.1"
+material3 = "1.4.0"
+retrofit = "3.0.0"
+room = "2.8.2"
 # Build constants
 minSdk = "28"
 compileSdk = "36"
 targetSdk = "36"
 legacySupportV4 = "1.0.0"
+runtime = "1.9.3"
+# Compose
+compose-bom = "2025.10.00"
+viewmodel-compose = "2.9.4"
+coil-compose = "2.7.0"
+activity-compose = "1.11.0"
+navigation-compose = "2.9.5"
 
 [libraries]
+# Compose
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+androidx-compose-material3-window-size-class1 = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "material3" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata" }
+
+# Compose Navigation
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
+
+# Compose Lifecycle
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "viewmodel-compose" }
+
+# Activity Compose
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
+
 # Room
 android-room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 android-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
@@ -41,24 +64,21 @@ androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", 
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 
-# Navigation
-androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
-androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
-
-# UI Components
-androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
-androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment" }
+# Compose Lifecycle
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version = "lifecycle-compose" }
 
 # Google Auth
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentialsPlayServicesAuth" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 
 # Koin dependency injection
 koin = { group = "io.insert-koin", name = "koin-android" , version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 
-# Glide - загрузка и кэширование изображений
-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+# Coil для загрузки изображений в Compose
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-compose" }
 
 # Network - сетевые запросы
 gson = { module = "com.google.code.gson:gson", version.ref = "gson"}
@@ -73,9 +93,6 @@ firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx",
 # AndroidX Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-androidx-activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }  # Добавлено -ktx
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 # Testing - тестирование
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -83,10 +100,9 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
-
-# Google Auth
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+androidx-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
