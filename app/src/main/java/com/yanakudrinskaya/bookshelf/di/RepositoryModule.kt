@@ -1,31 +1,31 @@
 package com.yanakudrinskaya.bookshelf.di
 
-import com.yanakudrinskaya.bookshelf.on_boarding.data.OnBoardingRepositoryImpl
-import com.yanakudrinskaya.bookshelf.on_boarding.domain.OnBoardingRepository
-import com.yanakudrinskaya.bookshelf.auth.data.AuthRepositoryImpl
-import com.yanakudrinskaya.bookshelf.auth.domain.api.AuthRepository
-import com.yanakudrinskaya.bookshelf.profile.domain.api.LocalUserRepository
-import com.yanakudrinskaya.bookshelf.auth.data.utils.GoogleCredentialManager
-import com.yanakudrinskaya.bookshelf.library.data.ResourcesProviderRepositoryImpl
-import com.yanakudrinskaya.bookshelf.library.data.FirebaseBookshelfRepositoryImpl
-import com.yanakudrinskaya.bookshelf.library.domain.BookshelfRepository
-import com.yanakudrinskaya.bookshelf.library.domain.ResourcesProviderRepository
-import com.yanakudrinskaya.bookshelf.profile.data.AvatarManagerRepositoryImpl
-import com.yanakudrinskaya.bookshelf.profile.data.FileManagerImpl
-import com.yanakudrinskaya.bookshelf.profile.data.LocalUserRepositoryImpl
-import com.yanakudrinskaya.bookshelf.profile.data.UserProfileRepositoryImpl
-import com.yanakudrinskaya.bookshelf.profile.domain.api.AvatarManagerRepository
-import com.yanakudrinskaya.bookshelf.profile.domain.api.FileManager
-import com.yanakudrinskaya.bookshelf.profile.domain.api.UserProfileRepository
-import com.yanakudrinskaya.bookshelf.splash.data.SplashRepositoryImpl
-import com.yanakudrinskaya.bookshelf.splash.domain.SplashRepository
+import com.yanakudrinskaya.bookshelf.data.on_boarding.OnBoardingRepositoryImpl
+import com.yanakudrinskaya.bookshelf.domain.on_boarding.OnBoardingRepository
+import com.yanakudrinskaya.bookshelf.data.auth.AuthRepositoryImpl
+import com.yanakudrinskaya.bookshelf.domain.auth.api.AuthRepository
+import com.yanakudrinskaya.bookshelf.domain.profile.api.LocalUserRepository
+import com.yanakudrinskaya.bookshelf.data.auth.network.google_auth.GoogleCredentialManager
+import com.yanakudrinskaya.bookshelf.data.library.ResourcesProviderRepositoryImpl
+import com.yanakudrinskaya.bookshelf.data.library.FirebaseBookshelfRepositoryImpl
+import com.yanakudrinskaya.bookshelf.domain.library.BookshelfRepository
+import com.yanakudrinskaya.bookshelf.domain.library.ResourcesProviderRepository
+import com.yanakudrinskaya.bookshelf.data.profile.AvatarManagerRepositoryImpl
+import com.yanakudrinskaya.bookshelf.data.profile.FileManagerImpl
+import com.yanakudrinskaya.bookshelf.data.profile.LocalUserRepositoryImpl
+import com.yanakudrinskaya.bookshelf.data.profile.UserProfileRepositoryImpl
+import com.yanakudrinskaya.bookshelf.domain.profile.api.AvatarManagerRepository
+import com.yanakudrinskaya.bookshelf.domain.profile.api.FileManager
+import com.yanakudrinskaya.bookshelf.domain.profile.api.UserProfileRepository
+import com.yanakudrinskaya.bookshelf.data.splash.SplashRepositoryImpl
+import com.yanakudrinskaya.bookshelf.domain.splash.SplashRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val repositoryModule = module {
 
     single<AuthRepository> {
-        AuthRepositoryImpl(get(), get(), get(), get(), get())
+        AuthRepositoryImpl(get(), get(), get(), get(), get(), get(), get())
     }
 
     single<LocalUserRepository> {

@@ -1,14 +1,14 @@
 package com.yanakudrinskaya.bookshelf.di
 
-import com.yanakudrinskaya.bookshelf.add_book.ui.view_model.AddBookViewModel
-import com.yanakudrinskaya.bookshelf.library.ui.view_model.LibraryViewModel
-import com.yanakudrinskaya.bookshelf.wish.ui.view_model.WishViewModel
-import com.yanakudrinskaya.bookshelf.on_boarding.ui.view_model.OnBoardingViewModel
-import com.yanakudrinskaya.bookshelf.auth.ui.view_model.LoginViewModel
-import com.yanakudrinskaya.bookshelf.auth.ui.view_model.RegisterViewModel
-import com.yanakudrinskaya.bookshelf.profile.ui.view_model.ProfileViewModel
-import com.yanakudrinskaya.bookshelf.root.ui.view_model.RootViewModel
-import com.yanakudrinskaya.bookshelf.splash.ui.view_model.SplashViewModel
+import com.yanakudrinskaya.bookshelf.ui.add_book.view_model.AddBookViewModel
+import com.yanakudrinskaya.bookshelf.ui.library.view_model.LibraryViewModel
+import com.yanakudrinskaya.bookshelf.ui.wish.view_model.WishViewModel
+import com.yanakudrinskaya.bookshelf.ui.on_boarding.view_model.OnBoardingViewModel
+import com.yanakudrinskaya.bookshelf.ui.auth.view_model.LoginViewModel
+import com.yanakudrinskaya.bookshelf.ui.auth.view_model.RegisterViewModel
+import com.yanakudrinskaya.bookshelf.ui.profile.view_model.ProfileViewModel
+import com.yanakudrinskaya.bookshelf.ui.root.view_model.RootViewModel
+import com.yanakudrinskaya.bookshelf.ui.splash.view_model.SplashViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 

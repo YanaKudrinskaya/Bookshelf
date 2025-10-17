@@ -1,17 +1,17 @@
 package com.yanakudrinskaya.bookshelf.di
 
-import com.yanakudrinskaya.bookshelf.auth.domain.api.AuthInteractor
-import com.yanakudrinskaya.bookshelf.on_boarding.domain.OnBoardingContentUseCase
-import com.yanakudrinskaya.bookshelf.auth.domain.impl.AuthInteractorImpl
-import com.yanakudrinskaya.bookshelf.library.domain.BookshelfInteractor
-import com.yanakudrinskaya.bookshelf.library.domain.impl.BookshelfInteractorImpl
-import com.yanakudrinskaya.bookshelf.library.domain.use_cases.ResourcesProviderUseCase
-import com.yanakudrinskaya.bookshelf.profile.domain.api.AvatarInteractor
-import com.yanakudrinskaya.bookshelf.profile.domain.impl.AvatarInteractorImpl
-import com.yanakudrinskaya.bookshelf.profile.domain.use_cases.GetProfileUseCase
-import com.yanakudrinskaya.bookshelf.profile.domain.use_cases.LogoutUseCase
-import com.yanakudrinskaya.bookshelf.profile.domain.use_cases.UpdateUserNameUseCase
-import com.yanakudrinskaya.bookshelf.splash.domain.SplashUseCase
+import com.yanakudrinskaya.bookshelf.domain.auth.api.AuthInteractor
+import com.yanakudrinskaya.bookshelf.domain.on_boarding.OnBoardingContentUseCase
+import com.yanakudrinskaya.bookshelf.domain.auth.impl.AuthInteractorImpl
+import com.yanakudrinskaya.bookshelf.domain.library.BookshelfInteractor
+import com.yanakudrinskaya.bookshelf.domain.library.impl.BookshelfInteractorImpl
+import com.yanakudrinskaya.bookshelf.domain.library.use_cases.ResourcesProviderUseCase
+import com.yanakudrinskaya.bookshelf.domain.profile.api.AvatarInteractor
+import com.yanakudrinskaya.bookshelf.domain.profile.impl.AvatarInteractorImpl
+import com.yanakudrinskaya.bookshelf.domain.profile.use_cases.GetProfileUseCase
+import com.yanakudrinskaya.bookshelf.domain.profile.use_cases.LogoutUseCase
+import com.yanakudrinskaya.bookshelf.domain.profile.use_cases.UpdateUserNameUseCase
+import com.yanakudrinskaya.bookshelf.domain.splash.SplashUseCase
 import org.koin.dsl.module
 
 val interactorModule = module {

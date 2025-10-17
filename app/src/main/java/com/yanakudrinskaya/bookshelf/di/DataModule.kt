@@ -5,32 +5,49 @@ import android.net.ConnectivityManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
-import com.yanakudrinskaya.bookshelf.auth.data.network.AuthProvider
+import com.yanakudrinskaya.bookshelf.data.auth.network.AuthProvider
 import com.yanakudrinskaya.bookshelf.utils.NetworkMonitor
-import com.yanakudrinskaya.bookshelf.auth.data.mappers.UserFirestoreMapper
-import com.yanakudrinskaya.bookshelf.auth.data.mappers.UserSharedPrefsMapper
-import com.yanakudrinskaya.bookshelf.auth.data.network.FirebaseAuthProvider
-import com.yanakudrinskaya.bookshelf.auth.data.network.FirestoreUserManager
-import com.yanakudrinskaya.bookshelf.auth.data.network.GoogleProvider
-import com.yanakudrinskaya.bookshelf.auth.data.network.google_auth.FirebaseGoogleProvider
-import com.yanakudrinskaya.bookshelf.library.data.firebase.converters.AuthorConverter
-import com.yanakudrinskaya.bookshelf.library.data.firebase.converters.BookConverter
-import com.yanakudrinskaya.bookshelf.library.data.firebase.converters.WorkConverter
-import com.yanakudrinskaya.bookshelf.library.data.firebase.dao.FirebaseAuthorDao
-import com.yanakudrinskaya.bookshelf.library.data.firebase.dao.FirebaseBookAuthorDao
-import com.yanakudrinskaya.bookshelf.library.data.firebase.dao.FirebaseBookDao
-import com.yanakudrinskaya.bookshelf.library.data.firebase.dao.FirebaseBookWorkDao
-import com.yanakudrinskaya.bookshelf.library.data.firebase.dao.FirebaseBookshelfDao
-import com.yanakudrinskaya.bookshelf.library.data.firebase.dao.FirebaseWorkAuthorDao
-import com.yanakudrinskaya.bookshelf.library.data.firebase.dao.FirebaseWorkDao
-import com.yanakudrinskaya.bookshelf.profile.data.FileManagerImpl
-import com.yanakudrinskaya.bookshelf.profile.domain.api.FileManager
+import com.yanakudrinskaya.bookshelf.data.auth.mappers.UserFirestoreMapper
+import com.yanakudrinskaya.bookshelf.data.auth.mappers.UserSharedPrefsMapper
+import com.yanakudrinskaya.bookshelf.data.auth.network.FirebaseAuthProvider
+import com.yanakudrinskaya.bookshelf.data.auth.network.FirestoreUserManager
+import com.yanakudrinskaya.bookshelf.data.auth.network.GoogleProvider
+import com.yanakudrinskaya.bookshelf.data.auth.network.NetworkClient
+import com.yanakudrinskaya.bookshelf.data.auth.network.google_auth.FirebaseGoogleProvider
+import com.yanakudrinskaya.bookshelf.data.auth.network.yandex_auth.YandexApi
+import com.yanakudrinskaya.bookshelf.data.auth.network.yandex_auth.YandexRetrofitClient
+import com.yanakudrinskaya.bookshelf.data.library.firebase.converters.AuthorConverter
+import com.yanakudrinskaya.bookshelf.data.library.firebase.converters.BookConverter
+import com.yanakudrinskaya.bookshelf.data.library.firebase.converters.WorkConverter
+import com.yanakudrinskaya.bookshelf.data.library.firebase.dao.FirebaseAuthorDao
+import com.yanakudrinskaya.bookshelf.data.library.firebase.dao.FirebaseBookAuthorDao
+import com.yanakudrinskaya.bookshelf.data.library.firebase.dao.FirebaseBookDao
+import com.yanakudrinskaya.bookshelf.data.library.firebase.dao.FirebaseBookWorkDao
+import com.yanakudrinskaya.bookshelf.data.library.firebase.dao.FirebaseBookshelfDao
+import com.yanakudrinskaya.bookshelf.data.library.firebase.dao.FirebaseWorkAuthorDao
+import com.yanakudrinskaya.bookshelf.data.library.firebase.dao.FirebaseWorkDao
+import com.yanakudrinskaya.bookshelf.data.profile.FileManagerImpl
+import com.yanakudrinskaya.bookshelf.domain.profile.api.FileManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 const val APP_PREFERENCES = "app_prefs"
 
 val dataModule = module {
+
+    single<NetworkClient> {
+        YandexRetrofitClient(get(), get())
+    }
+
+    single<YandexApi> {
+        Retrofit.Builder()
+            .baseUrl("https://login.yandex.ru/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(YandexApi::class.java)
+    }
 
     single {
         FirebaseAuth.getInstance()
